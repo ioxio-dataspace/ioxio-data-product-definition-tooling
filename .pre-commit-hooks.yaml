@@ -1,0 +1,6 @@
+- id: data-product-definition-converter
+  name: Data Product Definition converter
+  entry: converter
+  language: python
+  language_version: python3
+  pass_filenames: false

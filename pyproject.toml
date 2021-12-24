@@ -11,6 +11,7 @@ packages = [
 ]
 
 [tool.poetry.scripts]
+converter = "converter.cli:cli"
 
 [tool.poetry.dependencies]
 python = ">=3.9.0"
