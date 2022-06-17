@@ -374,14 +374,13 @@ python-versions = "*"
 
 [[package]]
 name = "syrupy"
-version = "1.7.4"
+version = "2.3.0"
 description = "PyTest Snapshot Test Utility"
 category = "dev"
 optional = false
 python-versions = ">=3.6,<4"
 
 [package.dependencies]
-attrs = ">=18.2.0,<22.0.0"
 colored = ">=1.3.92,<2.0.0"
 pytest = ">=5.1.0,<8.0.0"
 
@@ -429,7 +428,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9.0,<4"
-content-hash = "74320021e247c4b8127578a150bbe8fd6ba941e480856620aeea0b2496c67555"
+content-hash = "567a0622ebea8cd58f727c2452db6ec970e3d9611e4698b28c84dd2196ae39ef"
 
 [metadata.files]
 anyio = [
@@ -634,8 +633,8 @@ stringcase = [
     {file = "stringcase-1.2.0.tar.gz", hash = "sha256:48a06980661908efe8d9d34eab2b6c13aefa2163b3ced26972902e3bdfd87008"},
 ]
 syrupy = [
-    {file = "syrupy-1.7.4-py3-none-any.whl", hash = "sha256:4634baba491ad93217300329e5c2d84bc38739f35e4d5790b678d06b666a2c98"},
-    {file = "syrupy-1.7.4.tar.gz", hash = "sha256:54e475ef161e1531e1a81e99e2a9f88be4aaeeddf3b356b4d10fd5803c725e38"},
+    {file = "syrupy-2.3.0-py3-none-any.whl", hash = "sha256:86ace229f9c36d0727515fa03809f498e845b011d4e4401a996302e00f7c8444"},
+    {file = "syrupy-2.3.0.tar.gz", hash = "sha256:9991ff68de89254ab11c8c0956069b0d3ce8ba3f15ea477e3d86b8d3856f7fa0"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

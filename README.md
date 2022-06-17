@@ -24,10 +24,10 @@ poetry run invoke release
 
 ```yaml
 repos:
--   repo: https://github.com/ioxio-nexus/data-product-definition-tooling
-    rev: main  # You probably want to lock this to a specific tag
+  - repo: https://github.com/ioxio-nexus/data-product-definition-tooling
+    rev: main # You probably want to lock this to a specific tag
     hooks:
-    -   id: data-product-definition-converter
+      - id: data-product-definition-converter
         files: "src/.*py$"
         args: ["src", "dest"]
 ```

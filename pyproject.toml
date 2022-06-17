@@ -27,7 +27,7 @@ pytest-asyncio = "^0.10.0"
 flake8 = "^3.9.2"
 mypy = "^0.942"
 black = "^22.3.0"
-syrupy = "^1.7.4"
+syrupy = "^2.3.0"
 invoke = "^1.7.0"
 
 [build-system]

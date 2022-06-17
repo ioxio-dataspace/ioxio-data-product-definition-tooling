@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from typer import Argument, Typer
+from typer import Argument, Exit, Typer
 
 from converter import convert_data_product_definitions
 
@@ -24,4 +24,5 @@ def convert_definitions(
         exists=True,
     ),
 ):
-    convert_data_product_definitions(src, dest)
+    should_fail_hook = convert_data_product_definitions(src, dest)
+    raise Exit(code=int(should_fail_hook))

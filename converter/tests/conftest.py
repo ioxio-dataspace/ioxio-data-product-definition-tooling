@@ -1,6 +1,5 @@
 import pytest
-
-from converter.tests.helpers import JSONSnapshotExtension
+from syrupy.extensions.json import JSONSnapshotExtension
 
 
 @pytest.fixture
