@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "data-product-definition-tooling"
-version = "0.0.2"
+version = "0.0.3"
 description = "Data Product Definition Tooling"
 authors = ["Digital Living International Ltd"]
 license = "BSD-3-Clause"
