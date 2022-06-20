@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 from typing import Optional, Type
 
@@ -85,12 +86,13 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     return openapi
 
 
-def convert_data_product_definitions(src: Path, dest: Path):
+def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     """
     Browse folder for definitions defined as python files
     and export them to corresponding OpenAPI specs in the output folder
     """
 
+    should_fail_hook = False
     for p in src.glob("**/*.py"):
         spec = importlib.util.spec_from_file_location(name=str(p), location=str(p))
         if not spec.loader:
@@ -121,5 +123,42 @@ def convert_data_product_definitions(src: Path, dest: Path):
                 json.dumps(openapi, indent=2, ensure_ascii=False) + "\n",
                 encoding="utf-8",
             )
+            run_pre_commit_hooks_on_file(out_file)
+            # Hook should fail as we modified the file.
+            should_fail_hook = True
         else:
-            print(f"Skipping {out_file}")
+            if file_is_untracked(out_file):
+                print(f"Untracked {out_file}")
+                should_fail_hook = True
+            else:
+                print(f"Skipping {out_file}")
+
+    return should_fail_hook
+
+
+def run_pre_commit_hooks_on_file(file: Path) -> None:
+    """
+    Run pre-commit hooks on a file.
+    """
+    subprocess.run(
+        [
+            "pre-commit",
+            "run",
+            "--files",
+            str(file),
+        ],
+        capture_output=True,
+    )
+
+
+def file_is_untracked(file: Path) -> bool:
+    """
+    Check if the file is untracked in git.
+    """
+    completed_process = subprocess.run(
+        ["git", "status", "--short", str(file)],
+        check=True,
+        capture_output=True,
+        encoding="utf-8",
+    )
+    return completed_process.stdout.startswith("??")
