@@ -18,29 +18,23 @@ class CamelCaseModel(BaseModel):
 
 class DataProductDefinition(BaseModel):
     description: Optional[str]
-    generic_description: Optional[str]
     name: Optional[str]
     request: Type[BaseModel]
     response: Type[BaseModel]
     route_description: Optional[str]
     route_summary: Optional[str]
-    summary: Optional[str]
+    summary: str
+    requires_authorization: bool = False
+    requires_consent: bool = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        if generic_description := kwargs.get("generic_description"):
+
+        if self.summary:
             if not self.route_description:
-                self.route_description = generic_description
-            if not self.summary:
-                self.summary = generic_description
+                self.route_description = self.summary
             if not self.description:
-                self.description = f"Data Product for {generic_description}"
-
-        if not self.route_description:
-            self.route_description = f"{self.name} Data Product"
-
-        if not generic_description and (not self.description or not self.summary):
-            raise ValueError(f"Please define required fields for {self.name}")
+                self.description = self.summary
 
 
 def export_openapi_spec(definition: DataProductDefinition) -> dict:
@@ -56,6 +50,22 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
         version="1.0.0",
     )
 
+    if definition.requires_authorization:
+        authorization_header_type = str
+        authorization_header_default_value = ...
+    else:
+        authorization_header_type = Optional[str]
+        authorization_header_default_value = None
+
+    if definition.requires_consent:
+        consent_header_type = str
+        consent_header_default_value = ...
+        consent_header_description = "Consent token"
+    else:
+        consent_header_type = Optional[str]
+        consent_header_default_value = None
+        consent_header_description = "Optional consent token"
+
     @app.post(
         f"/{definition.name}",
         summary=definition.route_summary,
@@ -64,12 +74,13 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     )
     def request(
         params: definition.request,
-        x_consent_token: Optional[str] = Header(
-            None,
-            description="Optional consent token",
+        x_consent_token: consent_header_type = Header(
+            consent_header_default_value,
+            description=consent_header_description,
         ),
-        authorization: Optional[str] = Header(
-            None, description='The login token. Value should be "Bearer [token]"'
+        authorization: authorization_header_type = Header(
+            authorization_header_default_value,
+            description='The login token. Value should be "Bearer [token]"',
         ),
         x_authorization_provider: Optional[str] = Header(
             None, description="The bare domain of the system that provided the token."

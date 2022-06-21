@@ -1,0 +1,201 @@
+{
+  "components": {
+    "schemas": {
+      "CurrentWeatherMetricRequest": {
+        "properties": {
+          "lat": {
+            "description": "The latitude coordinate of the desired location",
+            "example": 60.192059,
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Latitude",
+            "type": "number"
+          },
+          "lon": {
+            "description": "The longitude coordinate of the desired location",
+            "example": 24.945831,
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Longitude",
+            "type": "number"
+          }
+        },
+        "required": [
+          "lat",
+          "lon"
+        ],
+        "title": "CurrentWeatherMetricRequest",
+        "type": "object"
+      },
+      "CurrentWeatherMetricResponse": {
+        "properties": {
+          "humidity": {
+            "example": 72,
+            "title": "Current relative air humidity in %",
+            "type": "number"
+          },
+          "pressure": {
+            "example": 1007,
+            "title": "Current air pressure in hPa",
+            "type": "number"
+          },
+          "rain": {
+            "description": "If it's currently raining or not.",
+            "title": "Rain status",
+            "type": "boolean"
+          },
+          "temp": {
+            "example": 17.3,
+            "minimum": -273.15,
+            "title": "Current temperature in Celsius",
+            "type": "number"
+          },
+          "windDirection": {
+            "example": 220.0,
+            "maximum": 360.0,
+            "minimum": 0.0,
+            "title": "Current wind direction in meteorological wind direction degrees",
+            "type": "number"
+          },
+          "windSpeed": {
+            "example": 2.1,
+            "minimum": 0.0,
+            "title": "Current wind speed in m/s",
+            "type": "number"
+          }
+        },
+        "required": [
+          "humidity",
+          "pressure",
+          "rain",
+          "temp",
+          "windSpeed",
+          "windDirection"
+        ],
+        "title": "CurrentWeatherMetricResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Data Product for current weather with metric units",
+    "title": "Current Weather (Metric)",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.2",
+  "paths": {
+    "/Weather/Current/Metric": {
+      "post": {
+        "description": "Current weather in metric units",
+        "operationId": "request_Weather_Current_Metric",
+        "parameters": [
+          {
+            "description": "Consent token",
+            "in": "header",
+            "name": "x-consent-token",
+            "required": true,
+            "schema": {
+              "description": "Consent token",
+              "title": "X-Consent-Token",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The login token. Value should be \"Bearer [token]\"",
+            "in": "header",
+            "name": "authorization",
+            "required": true,
+            "schema": {
+              "description": "The login token. Value should be \"Bearer [token]\"",
+              "title": "Authorization",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The bare domain of the system that provided the token.",
+            "in": "header",
+            "name": "x-authorization-provider",
+            "required": false,
+            "schema": {
+              "description": "The bare domain of the system that provided the token.",
+              "title": "X-Authorization-Provider",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrentWeatherMetricRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentWeatherMetricResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Weather/Current/Metric"
+      }
+    }
+  }
+}
