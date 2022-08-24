@@ -102,7 +102,7 @@ cli = ["click (==8.0.3)", "pyyaml (==5.4.1)", "toml (==0.10.2)", "clevercsv (==0
 
 [[package]]
 name = "fastapi"
-version = "0.79.1"
+version = "0.80.0"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 category = "main"
 optional = false
@@ -421,7 +421,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9.0,<4"
-content-hash = "33d4a09053ba74ba49e871cc1d8f5de3a275fa361d3a60a3b5ee5da8897d854c"
+content-hash = "dbcf51e46cfed6dd6ada9e37623fb482ce7a1b374253d60288e7d9b80046bb1a"
 
 [metadata.files]
 anyio = [
