@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "data-product-definition-tooling"
-version = "0.0.5"
+version = "0.0.6"
 description = "Data Product Definition Tooling"
 authors = ["Digital Living International Ltd"]
 license = "BSD-3-Clause"
@@ -17,7 +17,7 @@ converter = "converter.cli:cli"
 python = ">=3.9.0,<4"
 typer = "^0.6.1"
 deepdiff = "^5.8.1"
-fastapi = "^0.79.1"
+fastapi = "^0.80.0"
 stringcase = "^1.2.0"
 
 [tool.poetry.dev-dependencies]
