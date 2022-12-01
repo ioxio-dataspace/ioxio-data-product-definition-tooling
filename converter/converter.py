@@ -98,6 +98,13 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     return openapi
 
 
+def styled_error(error: str, p: Path) -> str:
+    """
+    Style error messsages to make them clearer and easier to read
+    """
+    return f"[bold red]{error}[/bold red] in [yellow]{p}[/yellow]:exclamation:"
+
+
 def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     """
     Browse folder for definitions defined as python files
@@ -108,23 +115,20 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     for p in src.glob("**/*.py"):
         spec = importlib.util.spec_from_file_location(name=str(p), location=str(p))
 
-        def styledError(error):
-            return f"[bold red]{error}[/bold red] in [yellow]{p}[/yellow]:exclamation:"
-
         if not spec.loader:
             raise RuntimeError(f"Failed to import {p} module")
         try:
             module = spec.loader.load_module(str(p))
         except ValidationError as e:
             should_fail_hook = True
-            print(styledError("Validation error"))
+            print(styled_error("Validation error", p))
             print(e)
             continue
 
         try:
             definition: DataProductDefinition = getattr(module, "DEFINITION")
         except AttributeError:
-            print(styledError("Error finding DEFINITION variable"))
+            print(styled_error("Error finding DEFINITION variable", p))
             continue
 
         # Get definition name based on file path

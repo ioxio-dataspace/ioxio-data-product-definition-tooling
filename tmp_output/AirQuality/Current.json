@@ -1,0 +1,182 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Air Quality Index",
+    "description": "Data Product for current air quality index",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/AirQuality/Current": {
+      "post": {
+        "summary": "AirQuality/Current",
+        "description": "Current air quality",
+        "operationId": "request_AirQuality_Current",
+        "parameters": [
+          {
+            "description": "Optional consent token",
+            "required": false,
+            "schema": {
+              "title": "X-Consent-Token",
+              "type": "string",
+              "description": "Optional consent token"
+            },
+            "name": "x-consent-token",
+            "in": "header"
+          },
+          {
+            "description": "The login token. Value should be \"Bearer [token]\"",
+            "required": false,
+            "schema": {
+              "title": "Authorization",
+              "type": "string",
+              "description": "The login token. Value should be \"Bearer [token]\""
+            },
+            "name": "authorization",
+            "in": "header"
+          },
+          {
+            "description": "The bare domain of the system that provided the token.",
+            "required": false,
+            "schema": {
+              "title": "X-Authorization-Provider",
+              "type": "string",
+              "description": "The bare domain of the system that provided the token."
+            },
+            "name": "x-authorization-provider",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrentAirQualityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentAirQualityResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CurrentAirQualityRequest": {
+        "title": "CurrentAirQualityRequest",
+        "required": ["lat", "lon"],
+        "type": "object",
+        "properties": {
+          "lat": {
+            "title": "Latitude",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "type": "number",
+            "description": "The latitude coordinate of the desired location",
+            "example": 60.192059
+          },
+          "lon": {
+            "title": "Longitude",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "type": "number",
+            "description": "The longitude coordinate of the desired location",
+            "example": 24.945831
+          }
+        }
+      },
+      "CurrentAirQualityResponse": {
+        "title": "CurrentAirQualityResponse",
+        "required": ["airQualityIndex", "timestamp", "attribution"],
+        "type": "object",
+        "properties": {
+          "airQualityIndex": {
+            "title": "Air Quality Index",
+            "minimum": 0.0,
+            "type": "integer",
+            "description": "Current air quality index.\nRanges:\n0-50 Good;\n51-100 Moderate;\n101-150 Unhealthy For Sensitive Groups;\n151-200 Unhealthy;\n201-300 Very Unhealthy;\n301+ Hazardous",
+            "example": 30
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string",
+            "description": "Current timestamp in RFC 3339 format",
+            "example": "2020-04-03T13:00:00Z"
+          },
+          "attribution": {
+            "title": "Source Attribution",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of text to show required credits to data sources",
+            "example": ["Moscow State environmental monitoring"]
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": ["loc", "msg", "type"],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
