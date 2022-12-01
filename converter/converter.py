@@ -1,14 +1,13 @@
 import importlib.util
 import json
 import subprocess
-import typer
-from rich import print
 from pathlib import Path
 from typing import Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
 from pydantic import BaseModel, ValidationError
+from rich import print
 from stringcase import camelcase
 
 
@@ -108,20 +107,24 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     should_fail_hook = False
     for p in src.glob("**/*.py"):
         spec = importlib.util.spec_from_file_location(name=str(p), location=str(p))
+
+        def styledError(error):
+            return f"[bold red]{error}[/bold red] in [yellow]{p}[/yellow]:exclamation:"
+
         if not spec.loader:
             raise RuntimeError(f"Failed to import {p} module")
         try:
             module = spec.loader.load_module(str(p))
         except ValidationError as e:
             should_fail_hook = True
-            print(f"[bold red]Validation error[/bold red] in [yellow]{p}[/yellow]:exclamation:")
+            print(styledError("Validation error"))
             print(e)
             continue
 
         try:
             definition: DataProductDefinition = getattr(module, "DEFINITION")
         except AttributeError:
-            print(f"[bold red]Error finding DEFINITION variable[/bold red] in [yellow]{p}[/yellow]:exclamation:")
+            print(styledError("Error finding DEFINITION variable"))
             continue
 
         # Get definition name based on file path
