@@ -19,6 +19,7 @@ typer = {version = "^0.7.0", extras = ["all"]}
 deepdiff = "^5.8.1"
 fastapi = "^0.80.0"
 stringcase = "^1.2.0"
+pytest = "7.2.0"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.10.1"
