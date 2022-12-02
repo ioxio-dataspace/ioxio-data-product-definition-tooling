@@ -6,7 +6,8 @@ from typing import Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
+from rich import print
 from stringcase import camelcase
 
 
@@ -97,6 +98,13 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     return openapi
 
 
+def styled_error(error: str, path: Path) -> str:
+    """
+    Style error messages to make them clearer and easier to read
+    """
+    return f"[bold red]{error}[/bold red] in [yellow]{path}[/yellow]:exclamation:"
+
+
 def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     """
     Browse folder for definitions defined as python files
@@ -108,10 +116,19 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
         spec = importlib.util.spec_from_file_location(name=str(p), location=str(p))
         if not spec.loader:
             raise RuntimeError(f"Failed to import {p} module")
-        module = spec.loader.load_module(str(p))
-        definition: DataProductDefinition = getattr(module, "DEFINITION")
-        if not definition:
-            raise ValueError(f"Error finding DEFINITION variable in {p}")
+        try:
+            module = spec.loader.load_module(str(p))
+        except ValidationError as e:
+            should_fail_hook = True
+            print(styled_error("Validation error", p))
+            print(e)
+            continue
+
+        try:
+            definition: DataProductDefinition = getattr(module, "DEFINITION")
+        except AttributeError:
+            print(styled_error("Error finding DEFINITION variable", p))
+            continue
 
         # Get definition name based on file path
         definition.name = p.relative_to(src).with_suffix("").as_posix()
