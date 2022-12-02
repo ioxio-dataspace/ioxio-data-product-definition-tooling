@@ -114,7 +114,6 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     should_fail_hook = False
     for p in src.glob("**/*.py"):
         spec = importlib.util.spec_from_file_location(name=str(p), location=str(p))
-
         if not spec.loader:
             raise RuntimeError(f"Failed to import {p} module")
         try:
