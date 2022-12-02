@@ -98,11 +98,11 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     return openapi
 
 
-def styled_error(error: str, p: Path) -> str:
+def styled_error(error: str, path: Path) -> str:
     """
-    Style error messsages to make them clearer and easier to read
+    Style error messages to make them clearer and easier to read
     """
-    return f"[bold red]{error}[/bold red] in [yellow]{p}[/yellow]:exclamation:"
+    return f"[bold red]{error}[/bold red] in [yellow]{path}[/yellow]:exclamation:"
 
 
 def convert_data_product_definitions(src: Path, dest: Path) -> bool:
