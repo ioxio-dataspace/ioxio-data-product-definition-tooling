@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from converter import CamelCaseModel, DataProductDefinition
+from converter import CamelCaseModel, DataProductDefinition, ErrorResponse
 
 
 class BasicCompanyInfoRequest(CamelCaseModel):
@@ -25,10 +25,22 @@ class BasicCompanyInfoResponse(CamelCaseModel):
     )
 
 
+@ErrorResponse(description="Unavailable for some legal reasons")
+class UnavailableForLegalReasonsResponse(CamelCaseModel):
+    reasons: str = Field(
+        ...,
+        title="Reason",
+        description="The reason why the data is not available",
+    )
+
+
 DEFINITION = DataProductDefinition(
     description="Data Product for basic company info",
     request=BasicCompanyInfoRequest,
     response=BasicCompanyInfoResponse,
     route_description="Information about the company",
     summary="Basic Company Info",
+    error_responses={
+        422: UnavailableForLegalReasonsResponse,
+    },
 )

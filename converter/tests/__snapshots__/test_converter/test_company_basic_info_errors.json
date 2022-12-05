@@ -61,6 +61,20 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "UnavailableForLegalReasonsResponse": {
+        "properties": {
+          "reasons": {
+            "description": "The reason why the data is not available",
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reasons"
+        ],
+        "title": "UnavailableForLegalReasonsResponse",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -172,6 +186,16 @@
               }
             },
             "description": "Validation Error"
+          },
+          "451": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnavailableForLegalReasonsResponse"
+                }
+              }
+            },
+            "description": "Unavailable for some legal reasons"
           }
         },
         "summary": "Company/BasicInfo"
