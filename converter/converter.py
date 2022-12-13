@@ -2,13 +2,15 @@ import importlib.util
 import json
 import subprocess
 from pathlib import Path
-from typing import Dict, Optional, Type, Union
+from typing import Dict, Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
-from pydantic import BaseModel, ValidationError, conint
+from pydantic import BaseModel, ValidationError, conint, validator
 from rich import print
 from stringcase import camelcase
+
+from converter.errors import DATA_PRODUCT_ERRORS
 
 
 class CamelCaseModel(BaseModel):
@@ -60,13 +62,7 @@ class ErrorResponse:
         )
 
 
-ALLOWED_ERROR_CODES = Union[
-    # 422 is reserved for validation errors, we don't want it to be overridden
-    # 502 is reserved for wrapping any undefined/malformed error in a predictable way
-    conint(ge=400, lt=422),
-    conint(gt=422, lt=502),
-    conint(gt=502, lt=600),
-]
+ERROR_CODE = conint(ge=400, lt=600)
 
 
 class DataProductDefinition(BaseModel):
@@ -79,7 +75,7 @@ class DataProductDefinition(BaseModel):
     summary: str
     requires_authorization: bool = False
     requires_consent: bool = False
-    error_responses: Dict[ALLOWED_ERROR_CODES, ErrorModel] = {}
+    error_responses: Dict[ERROR_CODE, ErrorModel] = {}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -89,6 +85,18 @@ class DataProductDefinition(BaseModel):
                 self.route_description = self.summary
             if not self.description:
                 self.description = self.summary
+
+    @validator("error_responses")
+    def validate_error_responses(cls, v: Dict[ERROR_CODE, ErrorModel]):
+        status_codes = set(v.keys())
+        reserved_status_codes = set(DATA_PRODUCT_ERRORS.keys())
+        overlapping = status_codes.intersection(reserved_status_codes)
+        if overlapping:
+            raise ValueError(
+                "Can not contain reserved error code(s): "
+                f"{', '.join(str(n) for n in overlapping)}"
+            )
+        return v
 
 
 def export_openapi_spec(definition: DataProductDefinition) -> dict:
@@ -127,6 +135,7 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
         }
         for code, error_model in definition.error_responses.items()
     }
+    responses.update(DATA_PRODUCT_ERRORS)
 
     @app.post(
         f"/{definition.name}",
