@@ -22,6 +22,9 @@ def test_air_quality(tmpdir, json_snapshot):
 
 
 def test_company_basic_info_errors(tmpdir, json_snapshot):
+    """
+    Test with a definition that includes custom error message
+    """
     out_dir = tmpdir.mkdir("output")
     convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
 
