@@ -201,7 +201,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Weather/Current/Metric"
+        "summary": "Current Weather (Metric)"
       }
     }
   }
