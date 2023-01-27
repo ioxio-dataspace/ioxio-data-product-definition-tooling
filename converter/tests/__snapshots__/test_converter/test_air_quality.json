@@ -188,7 +188,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "AirQuality/Current"
+        "summary": "Air Quality Index"
       }
     }
   }
