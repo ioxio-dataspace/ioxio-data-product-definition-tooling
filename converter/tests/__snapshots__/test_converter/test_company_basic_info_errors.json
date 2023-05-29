@@ -326,7 +326,7 @@
             "description": "Gateway Timeout"
           }
         },
-        "summary": "Company/BasicInfo"
+        "summary": "Basic Company Info"
       }
     }
   }
