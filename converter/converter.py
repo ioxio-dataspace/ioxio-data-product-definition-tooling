@@ -85,6 +85,8 @@ class DataProductDefinition(BaseModel):
                 self.route_description = self.summary
             if not self.description:
                 self.description = self.summary
+            if not self.route_summary:
+                self.route_summary = self.summary
 
     @validator("error_responses")
     def validate_error_responses(cls, v: Dict[ERROR_CODE, ErrorModel]):
