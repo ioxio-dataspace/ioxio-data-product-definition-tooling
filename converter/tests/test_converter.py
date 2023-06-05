@@ -46,6 +46,17 @@ def test_current_weather_required_headers(tmpdir, json_snapshot):
     assert json_snapshot == dest_spec
 
 
+def test_teapot_deprecated(tmpdir, json_snapshot):
+    out_dir = tmpdir.mkdir("output")
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
+
+    dest_file = out_dir / "Appliance" / "CoffeeBrewer.json"
+    assert dest_file.exists()
+
+    dest_spec = json.loads(dest_file.read_text("utf-8"))
+    assert json_snapshot == dest_spec
+
+
 def test_data_product_definition_fallbacks():
     summary = "FooBar summary"
 
