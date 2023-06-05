@@ -76,6 +76,7 @@ class DataProductDefinition(BaseModel):
     requires_authorization: bool = False
     requires_consent: bool = False
     error_responses: Dict[ERROR_CODE, ErrorModel] = {}
+    deprecated: bool = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -145,6 +146,7 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
         description=definition.route_description,
         response_model=definition.response,
         responses=responses,
+        deprecated=definition.deprecated,
     )
     def request(
         params: definition.request,
