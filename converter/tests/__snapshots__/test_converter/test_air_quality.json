@@ -1,6 +1,39 @@
 {
   "components": {
     "schemas": {
+      "AuthorizationRequired": {
+        "properties": {
+          "message": {
+            "default": "Authorization is required to access this data source",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "title": "AuthorizationRequired",
+        "type": "object"
+      },
+      "AuthorizationRequiredForUnpublished": {
+        "properties": {
+          "message": {
+            "default": "Unpublished data sources require preview token",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "title": "AuthorizationRequiredForUnpublished",
+        "type": "object"
+      },
+      "ConsentRequired": {
+        "properties": {
+          "message": {
+            "default": "Consent is required to access this data source",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "title": "ConsentRequired",
+        "type": "object"
+      },
       "CurrentAirQualityRequest": {
         "properties": {
           "lat": {
@@ -62,6 +95,75 @@
         "title": "CurrentAirQualityResponse",
         "type": "object"
       },
+      "DataSourceError": {
+        "properties": {
+          "error": {
+            "description": "Raw error from the data source",
+            "title": "Original error"
+          },
+          "message": {
+            "default": "Data source returned an error",
+            "title": "Message",
+            "type": "string"
+          },
+          "status": {
+            "description": "Status code from the data source",
+            "minimum": 400.0,
+            "title": "Status code",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "status",
+          "error"
+        ],
+        "title": "DataSourceError",
+        "type": "object"
+      },
+      "DataSourceNotFound": {
+        "properties": {
+          "message": {
+            "default": "Requested data source is not found",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "title": "DataSourceNotFound",
+        "type": "object"
+      },
+      "DataSourceTimeout": {
+        "properties": {
+          "message": {
+            "default": "Timeout reached while communicating with the data source",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "title": "DataSourceTimeout",
+        "type": "object"
+      },
+      "DataSourceUnavailable": {
+        "properties": {
+          "message": {
+            "default": "Error while communicating with the data source",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "title": "DataSourceUnavailable",
+        "type": "object"
+      },
+      "DoesNotConformToDefinition": {
+        "properties": {
+          "message": {
+            "default": "Response from the data source does not conform to definition",
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "title": "DoesNotConformToDefinition",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -74,6 +176,28 @@
         },
         "title": "HTTPValidationError",
         "type": "object"
+      },
+      "ResponseFor401": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/AuthorizationRequired"
+          },
+          {
+            "$ref": "#/components/schemas/AuthorizationRequiredForUnpublished"
+          }
+        ],
+        "title": "ResponseFor401"
+      },
+      "ResponseFor502": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/DoesNotConformToDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/DataSourceError"
+          }
+        ],
+        "title": "ResponseFor502"
       },
       "ValidationError": {
         "properties": {
@@ -177,6 +301,36 @@
             },
             "description": "Successful Response"
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFor401"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentRequired"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceNotFound"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
           "422": {
             "content": {
               "application/json": {
@@ -186,6 +340,36 @@
               }
             },
             "description": "Validation Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFor502"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceUnavailable"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceTimeout"
+                }
+              }
+            },
+            "description": "Gateway Timeout"
           }
         },
         "summary": "Air Quality Index"

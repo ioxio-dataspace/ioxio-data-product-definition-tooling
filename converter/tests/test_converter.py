@@ -21,6 +21,20 @@ def test_air_quality(tmpdir, json_snapshot):
     assert json_snapshot == dest_spec
 
 
+def test_company_basic_info_errors(tmpdir, json_snapshot):
+    """
+    Test with a definition that includes custom error message
+    """
+    out_dir = tmpdir.mkdir("output")
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
+
+    dest_file = out_dir / "Company" / "BasicInfo.json"
+    assert dest_file.exists()
+
+    dest_spec = json.loads(dest_file.read_text("utf-8"))
+    assert json_snapshot == dest_spec
+
+
 def test_current_weather_required_headers(tmpdir, json_snapshot):
     out_dir = tmpdir.mkdir("output")
     convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))

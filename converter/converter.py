@@ -2,19 +2,67 @@ import importlib.util
 import json
 import subprocess
 from pathlib import Path
-from typing import Optional, Type
+from typing import Dict, Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, conint, validator
 from rich import print
 from stringcase import camelcase
+
+from converter.errors import DATA_PRODUCT_ERRORS
 
 
 class CamelCaseModel(BaseModel):
     class Config:
         alias_generator = camelcase
         allow_population_by_field_name = True
+
+
+class ErrorModel(BaseModel):
+    """
+    Wrapper used for error responses, see ErrorResponse decorator for more details.
+
+    Encapsulates the actual model and a description for the error.
+    """
+
+    model: Type[BaseModel]
+    description: str
+
+
+class ErrorResponse:
+    """
+    Decorator that should be used around any models that define an error to be used in
+    DataProductDefinition.error_responses. It will wrap the class in an ErrorModel in
+    order to define and store a custom description for the error in addition to the
+    actual model.
+
+    Usage:
+
+    @ErrorResponse(description="Not found")
+    class NotFoundResponse(CamelCaseModel):
+        ...
+
+
+    DEFINITION = DataProductDefinition(
+        ...
+        error_responses={
+            404: NotFoundResponse,
+        }
+    )
+    """
+
+    def __init__(self, description: str) -> None:
+        self.description = description
+
+    def __call__(self, model_cls: Type[BaseModel]) -> ErrorModel:
+        return ErrorModel(
+            model=model_cls,
+            description=self.description,
+        )
+
+
+ERROR_CODE = conint(ge=400, lt=600)
 
 
 class DataProductDefinition(BaseModel):
@@ -27,6 +75,7 @@ class DataProductDefinition(BaseModel):
     summary: str
     requires_authorization: bool = False
     requires_consent: bool = False
+    error_responses: Dict[ERROR_CODE, ErrorModel] = {}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -38,6 +87,18 @@ class DataProductDefinition(BaseModel):
                 self.description = self.summary
             if not self.route_summary:
                 self.route_summary = self.summary
+
+    @validator("error_responses")
+    def validate_error_responses(cls, v: Dict[ERROR_CODE, ErrorModel]):
+        status_codes = set(v.keys())
+        reserved_status_codes = set(DATA_PRODUCT_ERRORS.keys())
+        overlapping = status_codes.intersection(reserved_status_codes)
+        if overlapping:
+            raise ValueError(
+                "Can not contain reserved error code(s): "
+                f"{', '.join(str(n) for n in overlapping)}"
+            )
+        return v
 
 
 def export_openapi_spec(definition: DataProductDefinition) -> dict:
@@ -69,11 +130,21 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
         consent_header_default_value = None
         consent_header_description = "Optional consent token"
 
+    responses = {
+        code: {
+            "model": error_model.model,
+            "description": error_model.description,
+        }
+        for code, error_model in definition.error_responses.items()
+    }
+    responses.update(DATA_PRODUCT_ERRORS)
+
     @app.post(
         f"/{definition.name}",
         summary=definition.route_summary,
         description=definition.route_description,
         response_model=definition.response,
+        responses=responses,
     )
     def request(
         params: definition.request,

@@ -23,6 +23,53 @@
         "title": "AuthorizationRequiredForUnpublished",
         "type": "object"
       },
+      "BasicCompanyInfoRequest": {
+        "properties": {
+          "companyId": {
+            "description": "The ID of the company",
+            "example": "2464491-9",
+            "title": "Company ID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "companyId"
+        ],
+        "title": "BasicCompanyInfoRequest",
+        "type": "object"
+      },
+      "BasicCompanyInfoResponse": {
+        "properties": {
+          "companyForm": {
+            "example": "LLC",
+            "title": "The company form of the company",
+            "type": "string"
+          },
+          "companyId": {
+            "example": "2464491-9",
+            "title": "ID of the company",
+            "type": "string"
+          },
+          "name": {
+            "example": "Digital Living International Oy",
+            "title": "Name of the company",
+            "type": "string"
+          },
+          "registrationDate": {
+            "example": "2012-02-23",
+            "title": "Date of registration for the company",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "companyId",
+          "companyForm",
+          "registrationDate"
+        ],
+        "title": "BasicCompanyInfoResponse",
+        "type": "object"
+      },
       "ConsentRequired": {
         "properties": {
           "message": {
@@ -32,80 +79,6 @@
           }
         },
         "title": "ConsentRequired",
-        "type": "object"
-      },
-      "CurrentWeatherMetricRequest": {
-        "properties": {
-          "lat": {
-            "description": "The latitude coordinate of the desired location",
-            "example": 60.192059,
-            "maximum": 90.0,
-            "minimum": -90.0,
-            "title": "Latitude",
-            "type": "number"
-          },
-          "lon": {
-            "description": "The longitude coordinate of the desired location",
-            "example": 24.945831,
-            "maximum": 180.0,
-            "minimum": -180.0,
-            "title": "Longitude",
-            "type": "number"
-          }
-        },
-        "required": [
-          "lat",
-          "lon"
-        ],
-        "title": "CurrentWeatherMetricRequest",
-        "type": "object"
-      },
-      "CurrentWeatherMetricResponse": {
-        "properties": {
-          "humidity": {
-            "example": 72,
-            "title": "Current relative air humidity in %",
-            "type": "number"
-          },
-          "pressure": {
-            "example": 1007,
-            "title": "Current air pressure in hPa",
-            "type": "number"
-          },
-          "rain": {
-            "description": "If it's currently raining or not.",
-            "title": "Rain status",
-            "type": "boolean"
-          },
-          "temp": {
-            "example": 17.3,
-            "minimum": -273.15,
-            "title": "Current temperature in Celsius",
-            "type": "number"
-          },
-          "windDirection": {
-            "example": 220.0,
-            "maximum": 360.0,
-            "minimum": 0.0,
-            "title": "Current wind direction in meteorological wind direction degrees",
-            "type": "number"
-          },
-          "windSpeed": {
-            "example": 2.1,
-            "minimum": 0.0,
-            "title": "Current wind speed in m/s",
-            "type": "number"
-          }
-        },
-        "required": [
-          "humidity",
-          "pressure",
-          "rain",
-          "temp",
-          "windSpeed",
-          "windDirection"
-        ],
-        "title": "CurrentWeatherMetricResponse",
         "type": "object"
       },
       "DataSourceError": {
@@ -177,19 +150,6 @@
         "title": "DoesNotConformToDefinition",
         "type": "object"
       },
-      "HTTPValidationError": {
-        "properties": {
-          "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
-            "title": "Detail",
-            "type": "array"
-          }
-        },
-        "title": "HTTPValidationError",
-        "type": "object"
-      },
       "ResponseFor401": {
         "anyOf": [
           {
@@ -212,60 +172,41 @@
         ],
         "title": "ResponseFor502"
       },
-      "ValidationError": {
+      "UnavailableForLegalReasonsResponse": {
         "properties": {
-          "loc": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "integer"
-                }
-              ]
-            },
-            "title": "Location",
-            "type": "array"
-          },
-          "msg": {
-            "title": "Message",
-            "type": "string"
-          },
-          "type": {
-            "title": "Error Type",
+          "reasons": {
+            "description": "The reason why the data is not available",
+            "title": "Reason",
             "type": "string"
           }
         },
         "required": [
-          "loc",
-          "msg",
-          "type"
+          "reasons"
         ],
-        "title": "ValidationError",
+        "title": "UnavailableForLegalReasonsResponse",
         "type": "object"
       }
     }
   },
   "info": {
-    "description": "Data Product for current weather with metric units",
-    "title": "Current Weather (Metric)",
+    "description": "Data Product for basic company info",
+    "title": "Basic Company Info",
     "version": "1.0.0"
   },
   "openapi": "3.0.2",
   "paths": {
-    "/Weather/Current/Metric": {
+    "/Company/BasicInfo": {
       "post": {
-        "description": "Current weather in metric units",
-        "operationId": "request_Weather_Current_Metric",
+        "description": "Information about the company",
+        "operationId": "request_Company_BasicInfo",
         "parameters": [
           {
-            "description": "Consent token",
+            "description": "Optional consent token",
             "in": "header",
             "name": "x-consent-token",
-            "required": true,
+            "required": false,
             "schema": {
-              "description": "Consent token",
+              "description": "Optional consent token",
               "title": "X-Consent-Token",
               "type": "string"
             }
@@ -274,7 +215,7 @@
             "description": "The login token. Value should be \"Bearer [token]\"",
             "in": "header",
             "name": "authorization",
-            "required": true,
+            "required": false,
             "schema": {
               "description": "The login token. Value should be \"Bearer [token]\"",
               "title": "Authorization",
@@ -297,7 +238,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CurrentWeatherMetricRequest"
+                "$ref": "#/components/schemas/BasicCompanyInfoRequest"
               }
             }
           },
@@ -308,7 +249,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentWeatherMetricResponse"
+                  "$ref": "#/components/schemas/BasicCompanyInfoResponse"
                 }
               }
             },
@@ -348,11 +289,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
+                  "$ref": "#/components/schemas/UnavailableForLegalReasonsResponse"
                 }
               }
             },
-            "description": "Validation Error"
+            "description": "Unavailable for some legal reasons"
           },
           "502": {
             "content": {
@@ -385,7 +326,7 @@
             "description": "Gateway Timeout"
           }
         },
-        "summary": "Current Weather (Metric)"
+        "summary": "Basic Company Info"
       }
     }
   }
