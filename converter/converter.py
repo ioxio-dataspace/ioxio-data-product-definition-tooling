@@ -2,7 +2,7 @@ import importlib.util
 import json
 import subprocess
 from pathlib import Path
-from typing import Dict, Optional, Type
+from typing import Dict, List, Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
@@ -187,6 +187,7 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     """
 
     should_fail_hook = False
+    modified_files = []
     for p in src.glob("**/*.py"):
         spec = importlib.util.spec_from_file_location(name=str(p), location=str(p))
         if not spec.loader:
@@ -226,7 +227,7 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
                 json.dumps(openapi, indent=2, ensure_ascii=False) + "\n",
                 encoding="utf-8",
             )
-            run_pre_commit_hooks_on_file(out_file)
+            modified_files.append(out_file)
             # Hook should fail as we modified the file.
             should_fail_hook = True
         else:
@@ -236,19 +237,23 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
             else:
                 print(f"Skipping {out_file}")
 
+    # Run hooks on all modified files at once to save overhead from subprocess
+    run_pre_commit_hooks_on_files(modified_files)
+
     return should_fail_hook
 
 
-def run_pre_commit_hooks_on_file(file: Path) -> None:
+def run_pre_commit_hooks_on_files(files: List[Path]) -> None:
     """
-    Run pre-commit hooks on a file.
+    Run pre-commit hooks on files.
     """
+    files = [str(file) for file in files]
     subprocess.run(
         [
             "pre-commit",
             "run",
             "--files",
-            str(file),
+            *files,
         ],
         capture_output=True,
     )
