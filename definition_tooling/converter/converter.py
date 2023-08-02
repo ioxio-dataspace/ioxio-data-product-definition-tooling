@@ -10,7 +10,7 @@ from pydantic import BaseModel, ValidationError, conint, validator
 from rich import print
 from stringcase import camelcase
 
-from converter.errors import DATA_PRODUCT_ERRORS
+from definition_tooling.api_errors import DATA_PRODUCT_ERRORS
 
 
 class CamelCaseModel(BaseModel):

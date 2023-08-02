@@ -1,40 +1,12 @@
 {
   "components": {
     "schemas": {
-      "AuthorizationRequired": {
-        "properties": {
-          "message": {
-            "default": "Authorization is required to access this data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "AuthorizationRequired",
+      "BadGateway": {
+        "properties": {},
+        "title": "BadGateway",
         "type": "object"
       },
-      "AuthorizationRequiredForUnpublished": {
-        "properties": {
-          "message": {
-            "default": "Unpublished data sources require preview token",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "AuthorizationRequiredForUnpublished",
-        "type": "object"
-      },
-      "ConsentRequired": {
-        "properties": {
-          "message": {
-            "default": "Consent is required to access this data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "ConsentRequired",
-        "type": "object"
-      },
-      "CurrentWeatherMetricRequest": {
+      "CurrentAirQualityRequest": {
         "properties": {
           "lat": {
             "description": "The latitude coordinate of the desired location",
@@ -53,128 +25,115 @@
             "type": "number"
           }
         },
-        "required": [
-          "lat",
-          "lon"
-        ],
-        "title": "CurrentWeatherMetricRequest",
+        "required": ["lat", "lon"],
+        "title": "CurrentAirQualityRequest",
         "type": "object"
       },
-      "CurrentWeatherMetricResponse": {
+      "CurrentAirQualityResponse": {
         "properties": {
-          "humidity": {
-            "example": 72,
-            "title": "Current relative air humidity in %",
-            "type": "number"
-          },
-          "pressure": {
-            "example": 1007,
-            "title": "Current air pressure in hPa",
-            "type": "number"
-          },
-          "rain": {
-            "description": "If it's currently raining or not.",
-            "title": "Rain status",
-            "type": "boolean"
-          },
-          "temp": {
-            "example": 17.3,
-            "minimum": -273.15,
-            "title": "Current temperature in Celsius",
-            "type": "number"
-          },
-          "windDirection": {
-            "example": 220.0,
-            "maximum": 360.0,
+          "airQualityIndex": {
+            "description": "Current air quality index.\nRanges:\n0-50 Good;\n51-100 Moderate;\n101-150 Unhealthy For Sensitive Groups;\n151-200 Unhealthy;\n201-300 Very Unhealthy;\n301+ Hazardous",
+            "example": 30,
             "minimum": 0.0,
-            "title": "Current wind direction in meteorological wind direction degrees",
-            "type": "number"
+            "title": "Air Quality Index",
+            "type": "integer"
           },
-          "windSpeed": {
-            "example": 2.1,
-            "minimum": 0.0,
-            "title": "Current wind speed in m/s",
-            "type": "number"
+          "attribution": {
+            "description": "List of text to show required credits to data sources",
+            "example": ["Moscow State environmental monitoring"],
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Attribution",
+            "type": "array"
+          },
+          "timestamp": {
+            "description": "Current timestamp in RFC 3339 format",
+            "example": "2020-04-03T13:00:00Z",
+            "title": "Timestamp",
+            "type": "string"
           }
         },
-        "required": [
-          "humidity",
-          "pressure",
-          "rain",
-          "temp",
-          "windSpeed",
-          "windDirection"
-        ],
-        "title": "CurrentWeatherMetricResponse",
+        "required": ["airQualityIndex", "timestamp", "attribution"],
+        "title": "CurrentAirQualityResponse",
         "type": "object"
       },
       "DataSourceError": {
         "properties": {
-          "error": {
-            "description": "Raw error from the data source",
-            "title": "Original error"
-          },
           "message": {
-            "default": "Data source returned an error",
-            "title": "Message",
+            "description": "Error description",
+            "title": "Error message",
             "type": "string"
           },
-          "status": {
-            "description": "Status code from the data source",
-            "minimum": 400.0,
-            "title": "Status code",
-            "type": "integer"
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
           }
         },
-        "required": [
-          "status",
-          "error"
-        ],
+        "required": ["type", "message"],
         "title": "DataSourceError",
         "type": "object"
       },
       "DataSourceNotFound": {
         "properties": {
           "message": {
-            "default": "Requested data source is not found",
+            "default": "Data source not found",
             "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "default": "data_source_not_found",
+            "title": "Type",
             "type": "string"
           }
         },
         "title": "DataSourceNotFound",
         "type": "object"
       },
-      "DataSourceTimeout": {
-        "properties": {
-          "message": {
-            "default": "Timeout reached while communicating with the data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "DataSourceTimeout",
-        "type": "object"
-      },
-      "DataSourceUnavailable": {
-        "properties": {
-          "message": {
-            "default": "Error while communicating with the data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "DataSourceUnavailable",
-        "type": "object"
-      },
       "DoesNotConformToDefinition": {
         "properties": {
+          "data_source_status_code": {
+            "description": "HTTP status code returned from the data source",
+            "title": "Data source status code",
+            "type": "integer"
+          },
           "message": {
-            "default": "Response from the data source does not conform to definition",
+            "default": "Response from data source does not conform to definition",
             "title": "Message",
             "type": "string"
           }
         },
+        "required": ["data_source_status_code"],
         "title": "DoesNotConformToDefinition",
+        "type": "object"
+      },
+      "Forbidden": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": ["type", "message"],
+        "title": "Forbidden",
+        "type": "object"
+      },
+      "GatewayTimeout": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          }
+        },
+        "title": "GatewayTimeout",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -190,27 +149,50 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ResponseFor401": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/AuthorizationRequired"
+      "NotFound": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
           },
-          {
-            "$ref": "#/components/schemas/AuthorizationRequiredForUnpublished"
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
           }
-        ],
-        "title": "ResponseFor401"
+        },
+        "required": ["type", "message"],
+        "title": "NotFound",
+        "type": "object"
       },
-      "ResponseFor502": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/DoesNotConformToDefinition"
-          },
-          {
-            "$ref": "#/components/schemas/DataSourceError"
+      "ServiceUnavailable": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
           }
-        ],
-        "title": "ResponseFor502"
+        },
+        "title": "ServiceUnavailable",
+        "type": "object"
+      },
+      "Unauthorized": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": ["type", "message"],
+        "title": "Unauthorized",
+        "type": "object"
       },
       "ValidationError": {
         "properties": {
@@ -237,35 +219,31 @@
             "type": "string"
           }
         },
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError",
         "type": "object"
       }
     }
   },
   "info": {
-    "description": "Data Product for current weather with metric units",
-    "title": "Current Weather (Metric)",
+    "description": "Data Product for current air quality index",
+    "title": "Air Quality Index",
     "version": "1.0.0"
   },
   "openapi": "3.0.2",
   "paths": {
-    "/Weather/Current/Metric": {
+    "/AirQuality/Current": {
       "post": {
-        "description": "Current weather in metric units",
-        "operationId": "request_Weather_Current_Metric",
+        "description": "Current air quality",
+        "operationId": "request_AirQuality_Current",
         "parameters": [
           {
-            "description": "Consent token",
+            "description": "Optional consent token",
             "in": "header",
             "name": "x-consent-token",
-            "required": true,
+            "required": false,
             "schema": {
-              "description": "Consent token",
+              "description": "Optional consent token",
               "title": "X-Consent-Token",
               "type": "string"
             }
@@ -274,7 +252,7 @@
             "description": "The login token. Value should be \"Bearer [token]\"",
             "in": "header",
             "name": "authorization",
-            "required": true,
+            "required": false,
             "schema": {
               "description": "The login token. Value should be \"Bearer [token]\"",
               "title": "Authorization",
@@ -297,7 +275,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CurrentWeatherMetricRequest"
+                "$ref": "#/components/schemas/CurrentAirQualityRequest"
               }
             }
           },
@@ -308,7 +286,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentWeatherMetricResponse"
+                  "$ref": "#/components/schemas/CurrentAirQualityResponse"
                 }
               }
             },
@@ -318,7 +296,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseFor401"
+                  "$ref": "#/components/schemas/Unauthorized"
                 }
               }
             },
@@ -328,7 +306,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConsentRequired"
+                  "$ref": "#/components/schemas/Forbidden"
                 }
               }
             },
@@ -338,7 +316,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceNotFound"
+                  "$ref": "#/components/schemas/NotFound"
                 }
               }
             },
@@ -354,11 +332,31 @@
             },
             "description": "Validation Error"
           },
+          "444": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceNotFound"
+                }
+              }
+            },
+            "description": "Additional Response"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceError"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
           "502": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseFor502"
+                  "$ref": "#/components/schemas/BadGateway"
                 }
               }
             },
@@ -368,7 +366,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceUnavailable"
+                  "$ref": "#/components/schemas/ServiceUnavailable"
                 }
               }
             },
@@ -378,14 +376,24 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceTimeout"
+                  "$ref": "#/components/schemas/GatewayTimeout"
                 }
               }
             },
             "description": "Gateway Timeout"
+          },
+          "550": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoesNotConformToDefinition"
+                }
+              }
+            },
+            "description": "Additional Response"
           }
         },
-        "summary": "Current Weather (Metric)"
+        "summary": "Air Quality Index"
       }
     }
   }

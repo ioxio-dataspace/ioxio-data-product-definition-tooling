@@ -1,26 +1,9 @@
 {
   "components": {
     "schemas": {
-      "AuthorizationRequired": {
-        "properties": {
-          "message": {
-            "default": "Authorization is required to access this data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "AuthorizationRequired",
-        "type": "object"
-      },
-      "AuthorizationRequiredForUnpublished": {
-        "properties": {
-          "message": {
-            "default": "Unpublished data sources require preview token",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "AuthorizationRequiredForUnpublished",
+      "BadGateway": {
+        "properties": {},
+        "title": "BadGateway",
         "type": "object"
       },
       "CoffeeBrewingRequest": {
@@ -32,9 +15,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "brew"
-        ],
+        "required": ["brew"],
         "title": "CoffeeBrewingRequest",
         "type": "object"
       },
@@ -46,90 +27,86 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "ok"
-        ],
+        "required": ["ok"],
         "title": "CoffeeBrewingResponse",
-        "type": "object"
-      },
-      "ConsentRequired": {
-        "properties": {
-          "message": {
-            "default": "Consent is required to access this data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "ConsentRequired",
         "type": "object"
       },
       "DataSourceError": {
         "properties": {
-          "error": {
-            "description": "Raw error from the data source",
-            "title": "Original error"
-          },
           "message": {
-            "default": "Data source returned an error",
-            "title": "Message",
+            "description": "Error description",
+            "title": "Error message",
             "type": "string"
           },
-          "status": {
-            "description": "Status code from the data source",
-            "minimum": 400.0,
-            "title": "Status code",
-            "type": "integer"
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
           }
         },
-        "required": [
-          "status",
-          "error"
-        ],
+        "required": ["type", "message"],
         "title": "DataSourceError",
         "type": "object"
       },
       "DataSourceNotFound": {
         "properties": {
           "message": {
-            "default": "Requested data source is not found",
+            "default": "Data source not found",
             "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "default": "data_source_not_found",
+            "title": "Type",
             "type": "string"
           }
         },
         "title": "DataSourceNotFound",
         "type": "object"
       },
-      "DataSourceTimeout": {
-        "properties": {
-          "message": {
-            "default": "Timeout reached while communicating with the data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "DataSourceTimeout",
-        "type": "object"
-      },
-      "DataSourceUnavailable": {
-        "properties": {
-          "message": {
-            "default": "Error while communicating with the data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "DataSourceUnavailable",
-        "type": "object"
-      },
       "DoesNotConformToDefinition": {
         "properties": {
+          "data_source_status_code": {
+            "description": "HTTP status code returned from the data source",
+            "title": "Data source status code",
+            "type": "integer"
+          },
           "message": {
-            "default": "Response from the data source does not conform to definition",
+            "default": "Response from data source does not conform to definition",
             "title": "Message",
             "type": "string"
           }
         },
+        "required": ["data_source_status_code"],
         "title": "DoesNotConformToDefinition",
+        "type": "object"
+      },
+      "Forbidden": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": ["type", "message"],
+        "title": "Forbidden",
+        "type": "object"
+      },
+      "GatewayTimeout": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          }
+        },
+        "title": "GatewayTimeout",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -145,27 +122,33 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ResponseFor401": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/AuthorizationRequired"
+      "NotFound": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
           },
-          {
-            "$ref": "#/components/schemas/AuthorizationRequiredForUnpublished"
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
           }
-        ],
-        "title": "ResponseFor401"
+        },
+        "required": ["type", "message"],
+        "title": "NotFound",
+        "type": "object"
       },
-      "ResponseFor502": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/DoesNotConformToDefinition"
-          },
-          {
-            "$ref": "#/components/schemas/DataSourceError"
+      "ServiceUnavailable": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
           }
-        ],
-        "title": "ResponseFor502"
+        },
+        "title": "ServiceUnavailable",
+        "type": "object"
       },
       "TeaPotError": {
         "properties": {
@@ -180,11 +163,25 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "ok",
-          "errorMessage"
-        ],
+        "required": ["ok", "errorMessage"],
         "title": "TeaPotError",
+        "type": "object"
+      },
+      "Unauthorized": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": ["type", "message"],
+        "title": "Unauthorized",
         "type": "object"
       },
       "ValidationError": {
@@ -212,11 +209,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError",
         "type": "object"
       }
@@ -294,7 +287,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseFor401"
+                  "$ref": "#/components/schemas/Unauthorized"
                 }
               }
             },
@@ -304,7 +297,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConsentRequired"
+                  "$ref": "#/components/schemas/Forbidden"
                 }
               }
             },
@@ -314,7 +307,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceNotFound"
+                  "$ref": "#/components/schemas/NotFound"
                 }
               }
             },
@@ -340,11 +333,31 @@
             },
             "description": "Validation Error"
           },
+          "444": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceNotFound"
+                }
+              }
+            },
+            "description": "Additional Response"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceError"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
           "502": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseFor502"
+                  "$ref": "#/components/schemas/BadGateway"
                 }
               }
             },
@@ -354,7 +367,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceUnavailable"
+                  "$ref": "#/components/schemas/ServiceUnavailable"
                 }
               }
             },
@@ -364,11 +377,21 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceTimeout"
+                  "$ref": "#/components/schemas/GatewayTimeout"
                 }
               }
             },
             "description": "Gateway Timeout"
+          },
+          "550": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoesNotConformToDefinition"
+                }
+              }
+            },
+            "description": "Additional Response"
           }
         },
         "summary": "Coffee brewer"
