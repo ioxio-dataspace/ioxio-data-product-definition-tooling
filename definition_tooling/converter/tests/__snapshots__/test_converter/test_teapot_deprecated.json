@@ -15,7 +15,9 @@
             "type": "string"
           }
         },
-        "required": ["brew"],
+        "required": [
+          "brew"
+        ],
         "title": "CoffeeBrewingRequest",
         "type": "object"
       },
@@ -27,7 +29,9 @@
             "type": "boolean"
           }
         },
-        "required": ["ok"],
+        "required": [
+          "ok"
+        ],
         "title": "CoffeeBrewingResponse",
         "type": "object"
       },
@@ -44,7 +48,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "DataSourceError",
         "type": "object"
       },
@@ -77,7 +84,9 @@
             "type": "string"
           }
         },
-        "required": ["data_source_status_code"],
+        "required": [
+          "data_source_status_code"
+        ],
         "title": "DoesNotConformToDefinition",
         "type": "object"
       },
@@ -94,7 +103,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "Forbidden",
         "type": "object"
       },
@@ -135,7 +147,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "NotFound",
         "type": "object"
       },
@@ -163,7 +178,10 @@
             "type": "boolean"
           }
         },
-        "required": ["ok", "errorMessage"],
+        "required": [
+          "ok",
+          "errorMessage"
+        ],
         "title": "TeaPotError",
         "type": "object"
       },
@@ -180,7 +198,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "Unauthorized",
         "type": "object"
       },
@@ -209,7 +230,11 @@
             "type": "string"
           }
         },
-        "required": ["loc", "msg", "type"],
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
         "title": "ValidationError",
         "type": "object"
       }

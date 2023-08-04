@@ -25,7 +25,10 @@
             "type": "number"
           }
         },
-        "required": ["lat", "lon"],
+        "required": [
+          "lat",
+          "lon"
+        ],
         "title": "CurrentAirQualityRequest",
         "type": "object"
       },
@@ -40,7 +43,9 @@
           },
           "attribution": {
             "description": "List of text to show required credits to data sources",
-            "example": ["Moscow State environmental monitoring"],
+            "example": [
+              "Moscow State environmental monitoring"
+            ],
             "items": {
               "type": "string"
             },
@@ -54,7 +59,11 @@
             "type": "string"
           }
         },
-        "required": ["airQualityIndex", "timestamp", "attribution"],
+        "required": [
+          "airQualityIndex",
+          "timestamp",
+          "attribution"
+        ],
         "title": "CurrentAirQualityResponse",
         "type": "object"
       },
@@ -71,7 +80,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "DataSourceError",
         "type": "object"
       },
@@ -104,7 +116,9 @@
             "type": "string"
           }
         },
-        "required": ["data_source_status_code"],
+        "required": [
+          "data_source_status_code"
+        ],
         "title": "DoesNotConformToDefinition",
         "type": "object"
       },
@@ -121,7 +135,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "Forbidden",
         "type": "object"
       },
@@ -162,7 +179,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "NotFound",
         "type": "object"
       },
@@ -190,7 +210,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "Unauthorized",
         "type": "object"
       },
@@ -219,7 +242,11 @@
             "type": "string"
           }
         },
-        "required": ["loc", "msg", "type"],
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
         "title": "ValidationError",
         "type": "object"
       }

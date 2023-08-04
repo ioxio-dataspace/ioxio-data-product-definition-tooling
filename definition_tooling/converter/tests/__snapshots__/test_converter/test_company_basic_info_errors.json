@@ -15,7 +15,9 @@
             "type": "string"
           }
         },
-        "required": ["companyId"],
+        "required": [
+          "companyId"
+        ],
         "title": "BasicCompanyInfoRequest",
         "type": "object"
       },
@@ -42,7 +44,12 @@
             "type": "string"
           }
         },
-        "required": ["name", "companyId", "companyForm", "registrationDate"],
+        "required": [
+          "name",
+          "companyId",
+          "companyForm",
+          "registrationDate"
+        ],
         "title": "BasicCompanyInfoResponse",
         "type": "object"
       },
@@ -59,7 +66,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "DataSourceError",
         "type": "object"
       },
@@ -92,7 +102,9 @@
             "type": "string"
           }
         },
-        "required": ["data_source_status_code"],
+        "required": [
+          "data_source_status_code"
+        ],
         "title": "DoesNotConformToDefinition",
         "type": "object"
       },
@@ -109,7 +121,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "Forbidden",
         "type": "object"
       },
@@ -137,7 +152,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "NotFound",
         "type": "object"
       },
@@ -165,7 +183,10 @@
             "type": "string"
           }
         },
-        "required": ["type", "message"],
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "Unauthorized",
         "type": "object"
       },
@@ -177,7 +198,9 @@
             "type": "string"
           }
         },
-        "required": ["reasons"],
+        "required": [
+          "reasons"
+        ],
         "title": "UnavailableForLegalReasonsResponse",
         "type": "object"
       }
