@@ -11,7 +11,9 @@ poetry install
 # Usage
 
 ```shell
-poetry run converter --help
+poetry run convert-definitions --help
+
+poetry run validate-definitions --help
 
 # run tests
 poetry run invoke test
