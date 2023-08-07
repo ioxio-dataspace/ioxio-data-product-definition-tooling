@@ -13,15 +13,15 @@ from definition_tooling.validator.errors import ValidatorError
 cli = Typer()
 
 
-def print_dashes(char="=", length=79):
+def print_dashes(char="-", length=79):
     print(char * length)
 
 
 @contextmanager
 def header():
-    print_dashes()
+    print_dashes(char="=")
     yield
-    print_dashes()
+    print_dashes(char="=")
 
 
 @cli.command(help="Validate Data Product definitions")
@@ -42,7 +42,8 @@ def validate_specs(path: Path) -> int:
             DefinitionValidator(spec_path).validate()
         except Exception as exc:
             if isinstance(exc, ValidatorError):
-                print(f"{exc.__class__.__name__}: {str(exc)}")
+                detail = ": " + str(exc) if str(exc) else ""
+                print(f"{exc.__class__.__name__}{detail}")
             else:
                 print("\n", traceback.format_exc())
             print_error("[FAILED]")
@@ -55,9 +56,9 @@ def validate_specs(path: Path) -> int:
     print_table(
         ["Summary", "#"],
         [
-            ["Total", passed + failed],
             ["Passed", passed],
             ["Failed", failed],
+            ["Total", passed + failed],
         ],
         "green" if not failed else "red",
     )

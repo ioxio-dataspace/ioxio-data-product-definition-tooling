@@ -12,7 +12,7 @@ class OpenApiValidationError(ValidatorError):
 
 
 class InvalidJSON(OpenApiValidationError):
-    msg = "File has an incorrect JSON format"
+    msg = "The file does not contain valid JSON"
 
 
 class UnsupportedVersion(OpenApiValidationError):

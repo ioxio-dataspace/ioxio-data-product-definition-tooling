@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ioxio-data-product-definition-tooling"
-version = "0.0.1"
+version = "0.1.0"
 description = "IOXIO Data Product Definition Tooling"
 authors = ["IOXIO Ltd"]
 license = "BSD-3-Clause"
@@ -8,6 +8,7 @@ readme = "README.md"
 repository = "https://github.com/ioxio-dataspace/ioxio-data-product-definition-tooling"
 packages = [
     {include="definition_tooling", from="."},
+    {include="converter", from="definition_tooling"},
 ]
 
 [tool.poetry.scripts]

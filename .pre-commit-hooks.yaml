@@ -4,3 +4,9 @@
   language: python
   language_version: python3
   pass_filenames: false
+- id: data-product-definition-converter
+  name: Data Product Definition converter
+  entry: convert-definitions
+  language: python
+  language_version: python3
+  pass_filenames: false

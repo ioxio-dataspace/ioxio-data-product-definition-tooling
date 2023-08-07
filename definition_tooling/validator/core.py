@@ -1,34 +1,9 @@
-import abc
 import json
 from pathlib import Path
 from typing import Union
 
 from definition_tooling.api_errors import DATA_PRODUCT_ERRORS
 from definition_tooling.validator import errors as err
-
-
-class BaseValidator:
-    def __init__(self, path: Union[str, Path]):
-        self.path = Path(path)
-
-    def validate(self):
-        try:
-            spec = json.loads(self.path.read_text(encoding="utf8"))
-        except json.JSONDecodeError:
-            raise err.InvalidJSON(f"Incorrect JSON: {self.path}")
-        except Exception as e:
-            raise err.ValidatorError(f"Failed to validate {self.path}: {e}")
-        self.validate_spec(spec)
-
-    @abc.abstractmethod
-    def validate_spec(self, spec: dict):
-        raise NotImplementedError
-
-
-class DefaultValidator(BaseValidator):
-    def validate_spec(self, spec: dict):
-        if not spec.get("openapi", "").startswith("3"):
-            raise err.UnsupportedVersion
 
 
 def validate_component_schema(spec: dict, components_schema: dict):
@@ -61,7 +36,7 @@ def validate_spec(spec: dict):
         raise err.ServersShouldNotBeDefined
 
     if not spec.get("openapi", "").startswith("3"):
-        raise err.UnsupportedVersion
+        raise err.UnsupportedVersion("Validator supports only OpenAPI 3.x specs")
 
     paths = spec.get("paths", {})
     if not paths:
@@ -93,9 +68,9 @@ def validate_spec(spec: dict):
         raise err.ResponseBodyMissing
     validate_component_schema(responses["200"], component_schemas)
 
-    for code in list(DATA_PRODUCT_ERRORS) + [422]:
+    for code in {*DATA_PRODUCT_ERRORS, 422}:
         if not responses.get(str(code)):
-            raise err.HTTPResponseIsMissing(f"Missing response for {code} status code")
+            raise err.HTTPResponseIsMissing(f"Missing response for status code {code}")
 
     headers = [
         param.get("name", "").lower()
@@ -108,7 +83,20 @@ def validate_spec(spec: dict):
         raise err.AuthProviderHeaderMissing
 
 
-class DefinitionValidator(BaseValidator):
-    def validate_spec(self, spec: dict):
+class DefinitionValidator:
+    def __init__(self, path: Union[str, Path]):
+        self.path = Path(path)
+
+    def validate(self):
+        try:
+            spec = json.loads(self.path.read_text(encoding="utf8"))
+        except json.JSONDecodeError:
+            raise err.InvalidJSON(f"Incorrect JSON: {self.path}")
+        except Exception as e:
+            raise err.ValidatorError(f"Failed to validate {self.path}: {e}")
+        self.validate_spec(spec)
+
+    @classmethod
+    def validate_spec(cls, spec: dict):
         # it's moved to separate function to reduce indentation
         return validate_spec(spec)

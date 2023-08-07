@@ -7,11 +7,6 @@ import pytest
 from definition_tooling.validator import errors as err
 from definition_tooling.validator.core import DefinitionValidator
 
-# from ..routes import SpecRouter
-# from ..validator import InvalidJSON, UnsupportedVersion
-# from ..validator import ihan_standards as ihan
-
-
 # Note: It's easier to get some 100% valid spec and corrupt it
 # instead of having multiple incorrect specs in the repo
 

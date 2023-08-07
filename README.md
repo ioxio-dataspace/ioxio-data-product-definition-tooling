@@ -1,4 +1,4 @@
-# IOXIO Data Product Definitions tooling
+# IOXIO® Data Product Definitions tooling
 
 Tools for managing Data Product definitions
 
