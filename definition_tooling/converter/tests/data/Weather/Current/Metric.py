@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from definition_tooling.converter import CamelCaseModel, DataProductDefinition
+from converter import CamelCaseModel, DataProductDefinition
 
 
 class CurrentWeatherMetricRequest(CamelCaseModel):

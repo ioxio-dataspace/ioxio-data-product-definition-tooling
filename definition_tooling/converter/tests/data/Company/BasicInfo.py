@@ -1,10 +1,6 @@
 from pydantic import Field
 
-from definition_tooling.converter import (
-    CamelCaseModel,
-    DataProductDefinition,
-    ErrorResponse,
-)
+from converter import CamelCaseModel, DataProductDefinition, ErrorResponse
 
 
 class BasicCompanyInfoRequest(CamelCaseModel):
