@@ -32,7 +32,7 @@ class NotFound(ApiError):
 # Note: 422 is added automatically by FastAPI
 
 
-class DataSourceNotFound(ApiError):
+class DataSourceNotFound(BaseApiError):
     __status__ = 444
     message: str = Field(
         "Data source not found", title="Error message", description="Error description"

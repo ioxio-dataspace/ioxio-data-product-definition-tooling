@@ -104,12 +104,8 @@
         "properties": {
           "message": {
             "default": "Data source not found",
-            "title": "Message",
-            "type": "string"
-          },
-          "type": {
-            "default": "data_source_not_found",
-            "title": "Type",
+            "description": "Error description",
+            "title": "Error message",
             "type": "string"
           }
         },
