@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from converter import (
+from definition_tooling.converter import (
     CamelCaseModel,
     DataProductDefinition,
     convert_data_product_definitions,

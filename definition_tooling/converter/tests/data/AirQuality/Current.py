@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import Field
 
-from converter import CamelCaseModel, DataProductDefinition
+from definition_tooling.converter import CamelCaseModel, DataProductDefinition
 
 
 class CurrentAirQualityRequest(CamelCaseModel):

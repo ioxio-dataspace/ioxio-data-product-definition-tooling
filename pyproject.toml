@@ -8,7 +8,6 @@ readme = "README.md"
 repository = "https://github.com/ioxio-dataspace/ioxio-data-product-definition-tooling"
 packages = [
     {include="definition_tooling", from="."},
-    {include="converter", from="definition_tooling"},
 ]
 
 [tool.poetry.scripts]

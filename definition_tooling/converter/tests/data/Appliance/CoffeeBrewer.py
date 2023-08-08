@@ -1,6 +1,10 @@
 from pydantic import Field
 
-from converter import CamelCaseModel, DataProductDefinition, ErrorResponse
+from definition_tooling.converter import (
+    CamelCaseModel,
+    DataProductDefinition,
+    ErrorResponse,
+)
 
 
 class CoffeeBrewingRequest(CamelCaseModel):
