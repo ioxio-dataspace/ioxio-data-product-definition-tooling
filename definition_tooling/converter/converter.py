@@ -238,7 +238,8 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
                 print(f"Skipping {out_file}")
 
     # Run hooks on all modified files at once to save overhead from subprocess
-    run_pre_commit_hooks_on_files(modified_files)
+    if modified_files:
+        run_pre_commit_hooks_on_files(modified_files)
 
     return should_fail_hook
 
