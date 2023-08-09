@@ -2,7 +2,7 @@ from pathlib import Path
 
 from typer import Argument, Exit, Typer
 
-from converter import convert_data_product_definitions
+from definition_tooling.converter import convert_data_product_definitions
 
 cli = Typer()
 

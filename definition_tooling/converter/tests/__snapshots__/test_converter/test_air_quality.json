@@ -1,37 +1,10 @@
 {
   "components": {
     "schemas": {
-      "AuthorizationRequired": {
-        "properties": {
-          "message": {
-            "default": "Authorization is required to access this data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "AuthorizationRequired",
-        "type": "object"
-      },
-      "AuthorizationRequiredForUnpublished": {
-        "properties": {
-          "message": {
-            "default": "Unpublished data sources require preview token",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "AuthorizationRequiredForUnpublished",
-        "type": "object"
-      },
-      "ConsentRequired": {
-        "properties": {
-          "message": {
-            "default": "Consent is required to access this data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "ConsentRequired",
+      "BadGateway": {
+        "description": "This response is reserved by Product Gateway.",
+        "properties": {},
+        "title": "BadGateway",
         "type": "object"
       },
       "CurrentAirQualityRequest": {
@@ -97,71 +70,87 @@
       },
       "DataSourceError": {
         "properties": {
-          "error": {
-            "description": "Raw error from the data source",
-            "title": "Original error"
-          },
           "message": {
-            "default": "Data source returned an error",
-            "title": "Message",
+            "description": "Error description",
+            "title": "Error message",
             "type": "string"
           },
-          "status": {
-            "description": "Status code from the data source",
-            "minimum": 400.0,
-            "title": "Status code",
-            "type": "integer"
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
           }
         },
         "required": [
-          "status",
-          "error"
+          "type",
+          "message"
         ],
         "title": "DataSourceError",
         "type": "object"
       },
       "DataSourceNotFound": {
+        "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
-            "default": "Requested data source is not found",
-            "title": "Message",
+            "default": "Data source not found",
+            "description": "Error description",
+            "title": "Error message",
             "type": "string"
           }
         },
         "title": "DataSourceNotFound",
         "type": "object"
       },
-      "DataSourceTimeout": {
-        "properties": {
-          "message": {
-            "default": "Timeout reached while communicating with the data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "DataSourceTimeout",
-        "type": "object"
-      },
-      "DataSourceUnavailable": {
-        "properties": {
-          "message": {
-            "default": "Error while communicating with the data source",
-            "title": "Message",
-            "type": "string"
-          }
-        },
-        "title": "DataSourceUnavailable",
-        "type": "object"
-      },
       "DoesNotConformToDefinition": {
+        "description": "This response is reserved by Product Gateway.",
         "properties": {
+          "data_source_status_code": {
+            "description": "HTTP status code returned from the data source",
+            "title": "Data source status code",
+            "type": "integer"
+          },
           "message": {
-            "default": "Response from the data source does not conform to definition",
+            "default": "Response from data source does not conform to definition",
             "title": "Message",
             "type": "string"
           }
         },
+        "required": [
+          "data_source_status_code"
+        ],
         "title": "DoesNotConformToDefinition",
+        "type": "object"
+      },
+      "Forbidden": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "message"
+        ],
+        "title": "Forbidden",
+        "type": "object"
+      },
+      "GatewayTimeout": {
+        "description": "This response is reserved by Product Gateway.",
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          }
+        },
+        "title": "GatewayTimeout",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -177,27 +166,57 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ResponseFor401": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/AuthorizationRequired"
+      "NotFound": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
           },
-          {
-            "$ref": "#/components/schemas/AuthorizationRequiredForUnpublished"
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
           }
+        },
+        "required": [
+          "type",
+          "message"
         ],
-        "title": "ResponseFor401"
+        "title": "NotFound",
+        "type": "object"
       },
-      "ResponseFor502": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/DoesNotConformToDefinition"
-          },
-          {
-            "$ref": "#/components/schemas/DataSourceError"
+      "ServiceUnavailable": {
+        "description": "This response is reserved by Product Gateway.",
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
           }
+        },
+        "title": "ServiceUnavailable",
+        "type": "object"
+      },
+      "Unauthorized": {
+        "properties": {
+          "message": {
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "Error identifier",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "message"
         ],
-        "title": "ResponseFor502"
+        "title": "Unauthorized",
+        "type": "object"
       },
       "ValidationError": {
         "properties": {
@@ -305,7 +324,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseFor401"
+                  "$ref": "#/components/schemas/Unauthorized"
                 }
               }
             },
@@ -315,7 +334,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConsentRequired"
+                  "$ref": "#/components/schemas/Forbidden"
                 }
               }
             },
@@ -325,7 +344,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceNotFound"
+                  "$ref": "#/components/schemas/NotFound"
                 }
               }
             },
@@ -341,11 +360,31 @@
             },
             "description": "Validation Error"
           },
+          "444": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceNotFound"
+                }
+              }
+            },
+            "description": "Additional Response"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceError"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
           "502": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseFor502"
+                  "$ref": "#/components/schemas/BadGateway"
                 }
               }
             },
@@ -355,7 +394,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceUnavailable"
+                  "$ref": "#/components/schemas/ServiceUnavailable"
                 }
               }
             },
@@ -365,11 +404,21 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataSourceTimeout"
+                  "$ref": "#/components/schemas/GatewayTimeout"
                 }
               }
             },
             "description": "Gateway Timeout"
+          },
+          "550": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoesNotConformToDefinition"
+                }
+              }
+            },
+            "description": "Additional Response"
           }
         },
         "summary": "Air Quality Index"

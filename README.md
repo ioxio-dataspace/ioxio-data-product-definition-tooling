@@ -1,4 +1,4 @@
-# Data Product Definitions tooling
+# IOXIO® Data Product Definitions tooling
 
 Tools for managing Data Product definitions
 
@@ -11,7 +11,9 @@ poetry install
 # Usage
 
 ```shell
-poetry run converter --help
+poetry run convert-definitions --help
+
+poetry run validate-definitions --help
 
 # run tests
 poetry run invoke test
@@ -24,7 +26,7 @@ poetry run invoke release
 
 ```yaml
 repos:
-  - repo: https://github.com/ioxio-dataspace/data-product-definition-tooling
+  - repo: https://github.com/ioxio-dataspace/ioxio-data-product-definition-tooling
     rev: main # You probably want to lock this to a specific tag
     hooks:
       - id: data-product-definition-converter
