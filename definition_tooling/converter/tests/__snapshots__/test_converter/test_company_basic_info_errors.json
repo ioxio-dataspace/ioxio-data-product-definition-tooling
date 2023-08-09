@@ -2,6 +2,7 @@
   "components": {
     "schemas": {
       "BadGateway": {
+        "description": "This response is reserved by Product Gateway.",
         "properties": {},
         "title": "BadGateway",
         "type": "object"
@@ -74,6 +75,7 @@
         "type": "object"
       },
       "DataSourceNotFound": {
+        "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
             "default": "Data source not found",
@@ -86,6 +88,7 @@
         "type": "object"
       },
       "DoesNotConformToDefinition": {
+        "description": "This response is reserved by Product Gateway.",
         "properties": {
           "data_source_status_code": {
             "description": "HTTP status code returned from the data source",
@@ -125,6 +128,7 @@
         "type": "object"
       },
       "GatewayTimeout": {
+        "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
             "description": "Error description",
@@ -156,6 +160,7 @@
         "type": "object"
       },
       "ServiceUnavailable": {
+        "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
             "description": "Error description",

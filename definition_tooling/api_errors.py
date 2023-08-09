@@ -33,9 +33,15 @@ class NotFound(ApiError):
 
 
 class DataSourceNotFound(BaseApiError):
+    """
+    This response is reserved by Product Gateway.
+    """
+
     __status__ = 444
     message: str = Field(
-        "Data source not found", title="Error message", description="Error description"
+        "Data source not found",
+        title="Error message",
+        description="Error description",
     )
 
 
@@ -44,10 +50,18 @@ class DataSourceError(ApiError):
 
 
 class BadGateway(BaseApiError):
+    """
+    This response is reserved by Product Gateway.
+    """
+
     __status__ = 502
 
 
 class ServiceUnavailable(BaseApiError):
+    """
+    This response is reserved by Product Gateway.
+    """
+
     __status__ = 503
     message: Optional[str] = Field(
         None, title="Error message", description="Error description"
@@ -55,6 +69,10 @@ class ServiceUnavailable(BaseApiError):
 
 
 class GatewayTimeout(BaseApiError):
+    """
+    This response is reserved by Product Gateway.
+    """
+
     __status__ = 504
     message: Optional[str] = Field(
         None, title="Error message", description="Error description"
@@ -62,6 +80,10 @@ class GatewayTimeout(BaseApiError):
 
 
 class DoesNotConformToDefinition(BaseApiError):
+    """
+    This response is reserved by Product Gateway.
+    """
+
     __status__ = 550
     message: str = "Response from data source does not conform to definition"
     data_source_status_code: int = Field(
