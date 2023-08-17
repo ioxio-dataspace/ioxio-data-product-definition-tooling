@@ -66,28 +66,22 @@ ERROR_CODE = conint(ge=400, lt=600)
 
 
 class DataProductDefinition(BaseModel):
-    description: Optional[str]
+    deprecated: bool = False
+    description: str
+    error_responses: Dict[ERROR_CODE, ErrorModel] = {}
     name: Optional[str]
     request: Type[BaseModel]
-    response: Type[BaseModel]
-    route_description: Optional[str]
-    route_summary: Optional[str]
-    summary: str
     requires_authorization: bool = False
     requires_consent: bool = False
-    error_responses: Dict[ERROR_CODE, ErrorModel] = {}
-    deprecated: bool = False
+    response: Type[BaseModel]
+    title: str
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        if self.summary:
-            if not self.route_description:
-                self.route_description = self.summary
+        if self.title:
             if not self.description:
-                self.description = self.summary
-            if not self.route_summary:
-                self.route_summary = self.summary
+                self.description = self.title
 
     @validator("error_responses")
     def validate_error_responses(cls, v: Dict[ERROR_CODE, ErrorModel]):
@@ -110,7 +104,7 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     :return: OpenAPI spec
     """
     app = FastAPI(
-        title=definition.summary,
+        title=definition.title,
         description=definition.description,
         version="1.0.0",
     )
@@ -142,8 +136,8 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
 
     @app.post(
         f"/{definition.name}",
-        summary=definition.route_summary,
-        description=definition.route_description,
+        summary=definition.title,
+        description=definition.description,
         response_model=definition.response,
         responses=responses,
         deprecated=definition.deprecated,
@@ -208,8 +202,6 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
 
         # Get definition name based on file path
         definition.name = p.relative_to(src).with_suffix("").as_posix()
-        if not definition.route_summary:
-            definition.route_summary = definition.name
 
         openapi = export_openapi_spec(definition)
 

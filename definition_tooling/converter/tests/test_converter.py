@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
 from definition_tooling.converter import (
     CamelCaseModel,
@@ -57,52 +58,38 @@ def test_teapot_deprecated(tmpdir, json_snapshot):
     assert json_snapshot == dest_spec
 
 
-def test_data_product_definition_fallbacks():
-    summary = "FooBar summary"
-
-    # Summary as fallback for description and route description
-    dpd = DataProductDefinition(
-        summary=summary,
-        name="Foo/Bar",
-        request=CamelCaseModel,
-        response=CamelCaseModel,
-    )
-    assert dpd.description == summary
-    assert dpd.summary == summary
-    assert dpd.route_description == summary
-
-    # Summary as fallback for route description only
-    description = "FooBar description"
-    dpd = DataProductDefinition(
-        summary=summary,
-        description=description,
-        name="Foo/Bar",
-        request=CamelCaseModel,
-        response=CamelCaseModel,
-    )
-    assert dpd.description == description
-    assert dpd.summary == summary
-    assert dpd.route_description == summary
-
-    # Summary as fallback for description only
-    route_description = "FooBar route description"
-    dpd = DataProductDefinition(
-        summary=summary,
-        route_description=route_description,
-        name="Foo/Bar",
-        request=CamelCaseModel,
-        response=CamelCaseModel,
-    )
-    assert dpd.description == summary
-    assert dpd.summary == summary
-    assert dpd.route_description == route_description
-
-    # Missing summary
-    with pytest.raises(ValueError):
+def test_required_fields():
+    with pytest.raises(ValidationError):
         DataProductDefinition(
-            description=description,
-            route_description=route_description,
+            title=None,
+            description="Description",
             name="Foo/Bar",
             request=CamelCaseModel,
             response=CamelCaseModel,
         )
+    with pytest.raises(ValidationError):
+        DataProductDefinition(
+            title="Title",
+            description=None,
+            name="Foo/Bar",
+            request=CamelCaseModel,
+            response=CamelCaseModel,
+        )
+
+
+def test_summary_and_route_description(tmpdir, json_snapshot):
+    out_dir = tmpdir.mkdir("output")
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
+
+    dest_file = out_dir / "AirQuality" / "Current.json"
+    assert dest_file.exists()
+
+    dest_spec = json.loads(dest_file.read_text("utf-8"))
+
+    title = dest_spec["info"]["title"]
+    summary = dest_spec["paths"]["/AirQuality/Current"]["post"]["summary"]
+    assert title == summary
+
+    desc = dest_spec["info"]["description"]
+    route_desc = dest_spec["paths"]["/AirQuality/Current"]["post"]["description"]
+    assert desc == route_desc

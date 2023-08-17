@@ -39,11 +39,10 @@ class UnavailableForLegalReasonsResponse(CamelCaseModel):
 
 
 DEFINITION = DataProductDefinition(
-    description="Data Product for basic company info",
+    title="Information about a company",
+    description="Legal information about a company such as registration address",
     request=BasicCompanyInfoRequest,
     response=BasicCompanyInfoResponse,
-    route_description="Information about the company",
-    summary="Basic Company Info",
     error_responses={
         422: UnavailableForLegalReasonsResponse,
     },

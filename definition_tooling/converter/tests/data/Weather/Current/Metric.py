@@ -42,11 +42,10 @@ class CurrentWeatherMetricResponse(CamelCaseModel):
 
 
 DEFINITION = DataProductDefinition(
-    description="Data Product for current weather with metric units",
+    title="Current weather in a given location",
+    description="Current weather in a given location in metric units",
     request=CurrentWeatherMetricRequest,
     response=CurrentWeatherMetricResponse,
-    route_description="Current weather in metric units",
-    summary="Current Weather (Metric)",
     requires_authorization=True,
     requires_consent=True,
 )

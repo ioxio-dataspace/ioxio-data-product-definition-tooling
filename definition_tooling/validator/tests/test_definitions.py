@@ -167,3 +167,21 @@ def test_http_errors_defined(tmp_path, code):
     spec = deepcopy(COMPANY_BASIC_INFO)
     spec["paths"]["/draft/Company/BasicInfo"]["post"]["responses"].pop(str(code), None)
     check_validation_error(tmp_path, spec, err.HTTPResponseIsMissing)
+
+
+def test_required_fields(tmp_path):
+    spec = deepcopy(COMPANY_BASIC_INFO)
+    del spec["info"]["description"]
+    check_validation_error(tmp_path, spec, err.MandatoryField)
+
+    spec = deepcopy(COMPANY_BASIC_INFO)
+    del spec["info"]["title"]
+    check_validation_error(tmp_path, spec, err.MandatoryField)
+
+    spec = deepcopy(COMPANY_BASIC_INFO)
+    del spec["paths"]["/draft/Company/BasicInfo"]["post"]["summary"]
+    check_validation_error(tmp_path, spec, err.MandatoryField)
+
+    spec = deepcopy(COMPANY_BASIC_INFO)
+    del spec["paths"]["/draft/Company/BasicInfo"]["post"]["description"]
+    check_validation_error(tmp_path, spec, err.MandatoryField)

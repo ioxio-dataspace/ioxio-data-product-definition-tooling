@@ -35,6 +35,10 @@ class SchemaMissing(DefinitionError):
     pass
 
 
+class MandatoryField(DefinitionError):
+    pass
+
+
 class NoEndpointsDefined(DefinitionError):
     pass
 

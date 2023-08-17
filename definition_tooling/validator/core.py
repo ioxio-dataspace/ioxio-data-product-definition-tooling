@@ -38,6 +38,10 @@ def validate_spec(spec: dict):
     if not spec.get("openapi", "").startswith("3"):
         raise err.UnsupportedVersion("Validator supports only OpenAPI 3.x specs")
 
+    for field in {"title", "description"}:
+        if not spec.get("info", {}).get(field):
+            raise err.MandatoryField(f"{field} is a required field")
+
     paths = spec.get("paths", {})
     if not paths:
         raise err.NoEndpointsDefined
@@ -52,6 +56,10 @@ def validate_spec(spec: dict):
         if methods != ["post"]:
             raise err.OnlyPostMethodAllowed
         post_route = path["post"]
+
+    for field in {"summary", "description"}:
+        if not post_route.get(field):
+            raise err.MandatoryField(f"{field} is a required field for POST route")
 
     component_schemas = spec.get("components", {}).get("schemas")
     if not component_schemas:
