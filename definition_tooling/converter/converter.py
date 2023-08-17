@@ -76,13 +76,6 @@ class DataProductDefinition(BaseModel):
     response: Type[BaseModel]
     title: str
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        if self.title:
-            if not self.description:
-                self.description = self.title
-
     @validator("error_responses")
     def validate_error_responses(cls, v: Dict[ERROR_CODE, ErrorModel]):
         status_codes = set(v.keys())
