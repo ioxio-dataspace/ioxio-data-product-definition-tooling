@@ -262,7 +262,7 @@
   "paths": {
     "/AirQuality/Current": {
       "post": {
-        "description": "Current air quality",
+        "description": "Data Product for current air quality index",
         "operationId": "request_AirQuality_Current",
         "parameters": [
           {

@@ -208,15 +208,15 @@
     }
   },
   "info": {
-    "description": "Data Product for basic company info",
-    "title": "Basic Company Info",
+    "description": "Legal information about a company such as registration address",
+    "title": "Information about a company",
     "version": "1.0.0"
   },
   "openapi": "3.0.2",
   "paths": {
     "/Company/BasicInfo": {
       "post": {
-        "description": "Information about the company",
+        "description": "Legal information about a company such as registration address",
         "operationId": "request_Company_BasicInfo",
         "parameters": [
           {
@@ -375,7 +375,7 @@
             "description": "Additional Response"
           }
         },
-        "summary": "Basic Company Info"
+        "summary": "Information about a company"
       }
     }
   }

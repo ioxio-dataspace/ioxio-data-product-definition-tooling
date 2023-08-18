@@ -267,15 +267,15 @@
     }
   },
   "info": {
-    "description": "Data Product for current weather with metric units",
-    "title": "Current Weather (Metric)",
+    "description": "Current weather in a given location in metric units",
+    "title": "Current weather in a given location",
     "version": "1.0.0"
   },
   "openapi": "3.0.2",
   "paths": {
     "/Weather/Current/Metric": {
       "post": {
-        "description": "Current weather in metric units",
+        "description": "Current weather in a given location in metric units",
         "operationId": "request_Weather_Current_Metric",
         "parameters": [
           {
@@ -434,7 +434,7 @@
             "description": "Additional Response"
           }
         },
-        "summary": "Current Weather (Metric)"
+        "summary": "Current weather in a given location"
       }
     }
   }
