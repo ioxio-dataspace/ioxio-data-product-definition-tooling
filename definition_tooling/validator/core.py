@@ -40,7 +40,7 @@ def validate_spec(spec: dict):
 
     for field in {"title", "description"}:
         if not spec.get("info", {}).get(field):
-            raise err.MandatoryField(f"{field} is a required field")
+            raise err.MandatoryField(f'{field} is a required field in "info" section')
 
     paths = spec.get("paths", {})
     if not paths:
