@@ -39,6 +39,7 @@ class UnavailableForLegalReasonsResponse(CamelCaseModel):
 
 
 DEFINITION = DataProductDefinition(
+    version="1.0.0",
     title="Information about a company",
     description="Legal information about a company such as registration address",
     request=BasicCompanyInfoRequest,

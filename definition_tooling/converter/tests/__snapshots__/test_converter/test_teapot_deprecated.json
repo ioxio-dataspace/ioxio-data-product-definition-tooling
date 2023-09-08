@@ -244,7 +244,7 @@
   "info": {
     "description": "Coffee brewer",
     "title": "Coffee brewer",
-    "version": "1.0.0"
+    "version": "0.1.0"
   },
   "openapi": "3.0.2",
   "paths": {
