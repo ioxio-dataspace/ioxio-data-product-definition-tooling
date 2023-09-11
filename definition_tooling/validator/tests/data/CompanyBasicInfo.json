@@ -6,7 +6,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/draft/Company/BasicInfo": {
+    "/Company/BasicInfo": {
       "post": {
         "summary": "Basic Company Info",
         "description": "Information about the company",
