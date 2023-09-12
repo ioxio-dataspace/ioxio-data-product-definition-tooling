@@ -17,10 +17,10 @@ validate-definitions = "definition_tooling.validator.cli:cli"
 [tool.poetry.dependencies]
 python = ">=3.9.0,<4"
 typer = {extras = ["all"], version = "^0.9.0"}
-deepdiff = "^6.3.0"
+deepdiff = "^6.5.0"
 fastapi = "^0.98.0"
 stringcase = "^1.2.0"
-pydantic = {version = "^1.10.8", extras = ["email"]}
+pydantic = {version = "^1.10.12", extras = ["email"]}
 semver = "^3.0.1"
 
 [tool.poetry.group.dev.dependencies]
