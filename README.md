@@ -30,6 +30,14 @@ repos:
     rev: main # You probably want to lock this to a specific tag
     hooks:
       - id: data-product-definition-converter
-        files: "src/.*py$"
-        args: ["src", "dest"]
+        pass_filenames: false
+        args: ["src", "DataProducts"]
+        files: |
+          (?x)^(
+            DataProducts/.*json|
+            src/.*py
+          )$
+      - id: data-product-definition-validator
+        files: ".*?DataProducts/.*?json$"
+        args: ["./DataProducts"]
 ```
