@@ -13,7 +13,7 @@ COMPANY_BASIC_INFO: dict = json.loads(
 @pytest.fixture
 def company_basic_info():
     """
-    Fixture that returns a deepcopy of the Company Basic information to use in tests.
+    Fixture that returns a deepcopy of the Company Basic Info to use in tests.
     The tests can freely modify it and corrupt it (easier than having multiple corrupt
     definitions in the repo).
 

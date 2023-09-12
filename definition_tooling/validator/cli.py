@@ -39,7 +39,7 @@ def validate_specs(path: Path) -> int:
     for spec_path in path.glob("**/*.json"):
         print(f"File: {spec_path}")
         try:
-            DefinitionValidator(root_path=path, spec_path=spec_path).validate()
+            DefinitionValidator(spec_path=spec_path, root_path=path).validate()
         except Exception as exc:
             if isinstance(exc, ValidatorError):
                 detail = ": " + str(exc) if str(exc) else ""

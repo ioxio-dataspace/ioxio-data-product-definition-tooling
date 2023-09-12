@@ -131,6 +131,10 @@ def test_version_missmatch(check_version_error, spec, version: str, file_version
 @pytest.mark.parametrize(
     "version,filename",
     [
+        ["0.0.1", "test/Company/BasicInfo"],
+        ["0.0.2", "test/Company/BasicInfo"],
+        ["0.0.1", "draft/Company/BasicInfo"],
+        ["0.0.200", "draft/Company/BasicInfo"],
         ["0.1.0", "Company/BasicInfo_v0.1"],
         ["0.1.1", "Company/BasicInfo_v0.1"],
         ["0.1.2", "Company/BasicInfo_v0.1"],
@@ -138,6 +142,7 @@ def test_version_missmatch(check_version_error, spec, version: str, file_version
         ["1.1.0-beta", "Company/BasicInfo_v1.1-beta"],
         ["1.1.0-beta.2", "Company/BasicInfo_v1.1-beta.2"],
         ["1.1.0", "Company/BasicInfo_v1.1"],
+        ["12.34.56", "Company/BasicInfo_v12.34"],
     ],
 )
 def test_valid_versions(validate_definition, spec, version: str, filename: str):
