@@ -60,9 +60,6 @@ def validate_version(spec: dict, spec_path: Path, root_path: Path):
         if version >= Version.parse("0.1.0"):
             raise err.TooHighVersion
     else:
-        if version < Version.parse("0.1.0"):
-            raise err.TooLowVersion
-
         try:
             file_version = parse_version_without_patch(file_version_str)
         except ValueError:
@@ -72,6 +69,9 @@ def validate_version(spec: dict, spec_path: Path, root_path: Path):
             version.major, version.minor, 0, version.prerelease, version.build
         ):
             raise err.VersionMissmatch
+
+        if version < Version.parse("0.1.0"):
+            raise err.TooLowVersion
 
 
 def validate_spec(spec: dict, spec_path: Path, root_path: Path):
