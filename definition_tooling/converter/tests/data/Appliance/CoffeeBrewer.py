@@ -39,6 +39,7 @@ class TeaPotError(CamelCaseModel):
 
 
 DEFINITION = DataProductDefinition(
+    version="0.1.0",
     title="Coffee brewer",
     description="Coffee brewer",
     request=CoffeeBrewingRequest,

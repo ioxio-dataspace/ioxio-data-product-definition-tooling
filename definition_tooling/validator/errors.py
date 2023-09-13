@@ -81,3 +81,31 @@ class SecurityShouldNotBeDefined(DefinitionError):
 
 class HTTPResponseIsMissing(DefinitionError):
     pass
+
+
+class VersionError(DefinitionError):
+    pass
+
+
+class InvalidOrMissingVersion(VersionError):
+    msg = '"version" in "info" is missing or not a valid semantic version'
+
+
+class UnexpectedVersionInFilename(VersionError):
+    msg = "Test or draft definition should not have version in filename"
+
+
+class TooHighVersion(VersionError):
+    msg = "Test and draft definition should have version < 0.1.0"
+
+
+class TooLowVersion(VersionError):
+    msg = "Definition (not test or draft) should have version >= 0.1.0"
+
+
+class InvalidOrMissingVersionInFileName(VersionError):
+    msg = "The version number in the filename is missing or has incorrect format"
+
+
+class VersionMissmatch(VersionError):
+    msg = "The versions in the definition and filename do not match"

@@ -8,6 +8,7 @@ from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
 from pydantic import BaseModel, ValidationError, conint, validator
 from rich import print
+from semver import Version
 from stringcase import camelcase
 
 from definition_tooling.api_errors import DATA_PRODUCT_ERRORS
@@ -65,7 +66,38 @@ class ErrorResponse:
 ERROR_CODE = conint(ge=400, lt=600)
 
 
+class PydanticVersion(Version):
+    """
+    This class is based on:
+    https://python-semver.readthedocs.io/en/latest/advanced/combine-pydantic-and-semver.html
+
+    Note: This won't work with Pydantic 2, for more details see:
+    https://docs.pydantic.dev/2.3/migration/
+    """
+
+    @classmethod
+    def _parse(cls, version):
+        return cls.parse(version)
+
+    @classmethod
+    def __get_validators__(cls):
+        """Return a list of validator methods for pydantic models."""
+        yield cls._parse
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        """Inject/mutate the pydantic field schema in-place."""
+        field_schema.update(
+            examples=[
+                "1.0.2",
+                "2.15.3-alpha",
+                "21.3.15-beta+12345",
+            ]
+        )
+
+
 class DataProductDefinition(BaseModel):
+    version: PydanticVersion = "0.0.1"
     deprecated: bool = False
     description: str
     error_responses: Dict[ERROR_CODE, ErrorModel] = {}
@@ -99,7 +131,7 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     app = FastAPI(
         title=definition.title,
         description=definition.description,
-        version="1.0.0",
+        version=str(definition.version),
     )
 
     if definition.requires_authorization:

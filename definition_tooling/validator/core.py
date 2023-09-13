@@ -2,8 +2,11 @@ import json
 from pathlib import Path
 from typing import Union
 
+from semver import Version
+
 from definition_tooling.api_errors import DATA_PRODUCT_ERRORS
 from definition_tooling.validator import errors as err
+from definition_tooling.validator.utils import parse_version_without_patch
 
 
 def validate_component_schema(spec: dict, components_schema: dict):
@@ -24,18 +27,67 @@ def validate_component_schema(spec: dict, components_schema: dict):
         raise err.SchemaMissing(f"Component schema is missing for {model_name}")
 
 
-def validate_spec(spec: dict):
+def validate_version(spec: dict, spec_path: Path, root_path: Path):
+    """
+    Validate version in definition and filename.
+
+    Definitions in "test/" and "draft/" namespaces should:
+    - have versions < 0.1.0
+    - not have any version in the filename
+
+    All other definitions should:
+    - have version >= 0.1.0
+    - have the _v{MAJOR}.{MINOR} number in the filename
+    - have versions that match the version in the filename
+
+    :param spec: OpenAPI spec
+    :param spec_path: Path to the actual definition
+    :param root_path: Path to the root of definitions
+    :raises VersionError: When there's a problem with the version number.
+    """
+    try:
+        version = Version.parse(spec["info"]["version"])
+    except (ValueError, TypeError, KeyError):
+        raise err.InvalidOrMissingVersion
+
+    test_definition = spec_path.is_relative_to(root_path / "test")
+    draft_definition = spec_path.is_relative_to(root_path / "draft")
+    _, __, file_version_str = spec_path.stem.partition("_v")
+
+    if test_definition or draft_definition:
+        if file_version_str:
+            raise err.UnexpectedVersionInFilename
+        if version >= Version.parse("0.1.0"):
+            raise err.TooHighVersion
+    else:
+        try:
+            file_version = parse_version_without_patch(file_version_str)
+        except ValueError:
+            raise err.InvalidOrMissingVersionInFileName
+
+        if file_version != Version(
+            version.major, version.minor, 0, version.prerelease, version.build
+        ):
+            raise err.VersionMissmatch
+
+        if version < Version.parse("0.1.0"):
+            raise err.TooLowVersion
+
+
+def validate_spec(spec: dict, spec_path: Path, root_path: Path):
     """
     Validate that OpenAPI spec looks like a data product definition. For example, that
     it only has one POST method defined.
 
     :param spec: OpenAPI spec
+    :param spec_path: Path to the actual definition
+    :param root_path: Path to the root of specs
     :raises OpenApiValidationError: When OpenAPI spec is incorrect
     """
     if "servers" in spec:
         raise err.ServersShouldNotBeDefined
 
-    if not spec.get("openapi", "").startswith("3"):
+    if not spec.get("openapi", "").startswith("3."):
         raise err.UnsupportedVersion("Validator supports only OpenAPI 3.x specs")
 
     for field in {"title", "description"}:
@@ -90,21 +142,28 @@ def validate_spec(spec: dict):
     if "x-authorization-provider" not in headers:
         raise err.AuthProviderHeaderMissing
 
+    validate_version(spec=spec, spec_path=spec_path, root_path=root_path)
+
 
 class DefinitionValidator:
-    def __init__(self, path: Union[str, Path]):
-        self.path = Path(path)
+    def __init__(
+        self,
+        spec_path: Union[str, Path],
+        root_path: Union[str, Path],
+    ):
+        self.root_path = Path(root_path)
+        self.spec_path = Path(spec_path)
 
     def validate(self):
         try:
-            spec = json.loads(self.path.read_text(encoding="utf8"))
+            spec = json.loads(self.spec_path.read_text(encoding="utf8"))
         except json.JSONDecodeError:
-            raise err.InvalidJSON(f"Incorrect JSON: {self.path}")
+            raise err.InvalidJSON(f"Incorrect JSON: {self.spec_path}")
         except Exception as e:
-            raise err.ValidatorError(f"Failed to validate {self.path}: {e}")
-        self.validate_spec(spec)
+            raise err.ValidatorError(f"Failed to validate {self.spec_path}: {e}")
+        self.validate_spec(spec, spec_path=self.spec_path, root_path=self.root_path)
 
     @classmethod
-    def validate_spec(cls, spec: dict):
+    def validate_spec(cls, spec: dict, spec_path: Path, root_path: Path):
         # it's moved to separate function to reduce indentation
-        return validate_spec(spec)
+        return validate_spec(spec, spec_path=spec_path, root_path=root_path)
