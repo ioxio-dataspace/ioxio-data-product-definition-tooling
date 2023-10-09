@@ -1,0 +1,358 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Basic Company Info",
+    "description": "Data Product for basic company info",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Company/BasicInfo": {
+      "post": {
+        "summary": "Basic Company Info",
+        "description": "Information about the company",
+        "operationId": "request_Company_BasicInfo",
+        "parameters": [
+          {
+            "description": "Optional consent token",
+            "required": false,
+            "schema": {
+              "title": "X-Consent-Token",
+              "type": "string",
+              "description": "Optional consent token"
+            },
+            "name": "x-consent-token",
+            "in": "header"
+          },
+          {
+            "description": "The login token. Value should be \"Bearer [token]\"",
+            "required": false,
+            "schema": {
+              "title": "Authorization",
+              "type": "string",
+              "description": "The login token. Value should be \"Bearer [token]\""
+            },
+            "name": "authorization",
+            "in": "header"
+          },
+          {
+            "description": "The bare domain of the system that provided the token.",
+            "required": false,
+            "schema": {
+              "title": "X-Authorization-Provider",
+              "type": "string",
+              "description": "The bare domain of the system that provided the token."
+            },
+            "name": "x-authorization-provider",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasicCompanyInfoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasicCompanyInfoResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unavailable for some legal reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnavailableForLegalReasonsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "444": {
+            "description": "Additional Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceNotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSourceError"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGateway"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailable"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayTimeout"
+                }
+              }
+            }
+          },
+          "550": {
+            "description": "Additional Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoesNotConformToDefinition"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BadGateway": {
+        "title": "BadGateway",
+        "type": "object",
+        "properties": {}
+      },
+      "BasicCompanyInfoRequest": {
+        "title": "BasicCompanyInfoRequest",
+        "required": ["companyId"],
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "title": "Company ID",
+            "type": "string",
+            "description": "The ID of the company",
+            "example": "2464491-9"
+          }
+        }
+      },
+      "BasicCompanyInfoResponse": {
+        "title": "BasicCompanyInfoResponse",
+        "required": ["name", "companyId", "companyForm", "registrationDate"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name of the company",
+            "type": "string",
+            "example": "Digital Living International Oy"
+          },
+          "companyId": {
+            "title": "ID of the company",
+            "type": "string",
+            "example": "2464491-9"
+          },
+          "companyForm": {
+            "title": "The company form of the company",
+            "type": "string",
+            "example": "LLC"
+          },
+          "registrationDate": {
+            "title": "Date of registration for the company",
+            "type": "string",
+            "example": "2012-02-23"
+          }
+        }
+      },
+      "DataSourceError": {
+        "title": "DataSourceError",
+        "required": ["type", "message"],
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "Error type",
+            "type": "string",
+            "description": "Error identifier"
+          },
+          "message": {
+            "title": "Error message",
+            "type": "string",
+            "description": "Error description"
+          }
+        }
+      },
+      "DataSourceNotFound": {
+        "title": "DataSourceNotFound",
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "Type",
+            "type": "string",
+            "default": "data_source_not_found"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string",
+            "default": "Data source not found"
+          }
+        }
+      },
+      "DoesNotConformToDefinition": {
+        "title": "DoesNotConformToDefinition",
+        "required": ["data_source_status_code"],
+        "type": "object",
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string",
+            "default": "Response from data source does not conform to definition"
+          },
+          "data_source_status_code": {
+            "title": "Data source status code",
+            "type": "integer",
+            "description": "HTTP status code returned from the data source"
+          }
+        }
+      },
+      "Forbidden": {
+        "title": "Forbidden",
+        "required": ["type", "message"],
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "Error type",
+            "type": "string",
+            "description": "Error identifier"
+          },
+          "message": {
+            "title": "Error message",
+            "type": "string",
+            "description": "Error description"
+          }
+        }
+      },
+      "GatewayTimeout": {
+        "title": "GatewayTimeout",
+        "type": "object",
+        "properties": {
+          "message": {
+            "title": "Error message",
+            "type": "string",
+            "description": "Error description"
+          }
+        }
+      },
+      "NotFound": {
+        "title": "NotFound",
+        "required": ["type", "message"],
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "Error type",
+            "type": "string",
+            "description": "Error identifier"
+          },
+          "message": {
+            "title": "Error message",
+            "type": "string",
+            "description": "Error description"
+          }
+        }
+      },
+      "ServiceUnavailable": {
+        "title": "ServiceUnavailable",
+        "type": "object",
+        "properties": {
+          "message": {
+            "title": "Error message",
+            "type": "string",
+            "description": "Error description"
+          }
+        }
+      },
+      "Unauthorized": {
+        "title": "Unauthorized",
+        "required": ["type", "message"],
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "Error type",
+            "type": "string",
+            "description": "Error identifier"
+          },
+          "message": {
+            "title": "Error message",
+            "type": "string",
+            "description": "Error description"
+          }
+        }
+      },
+      "UnavailableForLegalReasonsResponse": {
+        "title": "UnavailableForLegalReasonsResponse",
+        "required": ["reasons"],
+        "type": "object",
+        "properties": {
+          "reasons": {
+            "title": "Reason",
+            "type": "string",
+            "description": "The reason why the data is not available"
+          }
+        }
+      }
+    }
+  }
+}
