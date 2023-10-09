@@ -6,18 +6,19 @@ from typing import Dict, List, Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
-from pydantic import BaseModel, ValidationError, conint, validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
+from pydantic.json_schema import JsonSchemaValue
+from pydantic_core import core_schema
 from rich import print
 from semver import Version
 from stringcase import camelcase
+from typing_extensions import Annotated
 
 from definition_tooling.api_errors import DATA_PRODUCT_ERRORS
 
 
 class CamelCaseModel(BaseModel):
-    class Config:
-        alias_generator = camelcase
-        allow_population_by_field_name = True
+    model_config = ConfigDict(alias_generator=camelcase, populate_by_name=True)
 
 
 class ErrorModel(BaseModel):
@@ -63,7 +64,7 @@ class ErrorResponse:
         )
 
 
-ERROR_CODE = conint(ge=400, lt=600)
+ERROR_CODE = Annotated[int, Field(ge=400, lt=600)]
 
 
 class PydanticVersion(Version):
@@ -80,20 +81,20 @@ class PydanticVersion(Version):
         return cls.parse(version)
 
     @classmethod
-    def __get_validators__(cls):
+    def __get_pydantic_core_schema__(
+        cls, source_type, _handler
+    ) -> core_schema.CoreSchema:
         """Return a list of validator methods for pydantic models."""
-        yield cls._parse
+        return core_schema.no_info_wrap_validator_function(
+            cls.parse,
+            core_schema.str_schema(),
+            serialization=core_schema.to_string_ser_schema(),
+        )
 
     @classmethod
-    def __modify_schema__(cls, field_schema):
+    def __get_pydantic_json_schema__(cls, _core_schema, handler) -> JsonSchemaValue:
         """Inject/mutate the pydantic field schema in-place."""
-        field_schema.update(
-            examples=[
-                "1.0.2",
-                "2.15.3-alpha",
-                "21.3.15-beta+12345",
-            ]
-        )
+        return handler(core_schema.str_schema())
 
 
 class DataProductDefinition(BaseModel):
@@ -101,14 +102,15 @@ class DataProductDefinition(BaseModel):
     deprecated: bool = False
     description: str
     error_responses: Dict[ERROR_CODE, ErrorModel] = {}
-    name: Optional[str]
+    name: Optional[str] = None
     request: Type[BaseModel]
     requires_authorization: bool = False
     requires_consent: bool = False
     response: Type[BaseModel]
     title: str
 
-    @validator("error_responses")
+    @field_validator("error_responses")
+    @classmethod
     def validate_error_responses(cls, v: Dict[ERROR_CODE, ErrorModel]):
         status_codes = set(v.keys())
         reserved_status_codes = set(DATA_PRODUCT_ERRORS.keys())
