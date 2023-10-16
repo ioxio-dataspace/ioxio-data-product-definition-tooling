@@ -11,7 +11,9 @@
         "properties": {
           "brew": {
             "description": "Kind of drink to brew",
-            "example": "coffee",
+            "examples": [
+              "coffee"
+            ],
             "title": "Brew",
             "type": "string"
           }
@@ -25,7 +27,9 @@
       "CoffeeBrewingResponse": {
         "properties": {
           "ok": {
-            "example": true,
+            "examples": [
+              true
+            ],
             "title": "OK",
             "type": "boolean"
           }
@@ -113,9 +117,16 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "description": "Error description",
-            "title": "Error message",
-            "type": "string"
+            "title": "Error message"
           }
         },
         "title": "GatewayTimeout",
@@ -158,9 +169,16 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "description": "Error description",
-            "title": "Error message",
-            "type": "string"
+            "title": "Error message"
           }
         },
         "title": "ServiceUnavailable",
@@ -169,12 +187,16 @@
       "TeaPotError": {
         "properties": {
           "errorMessage": {
-            "example": "I'm a teapot",
+            "examples": [
+              "I'm a teapot"
+            ],
             "title": "Error message",
             "type": "string"
           },
           "ok": {
-            "example": false,
+            "examples": [
+              false
+            ],
             "title": "OK",
             "type": "boolean"
           }
@@ -246,7 +268,7 @@
     "title": "Coffee brewer",
     "version": "0.1.0"
   },
-  "openapi": "3.0.2",
+  "openapi": "3.1.0",
   "paths": {
     "/Appliance/CoffeeBrewer": {
       "post": {
@@ -260,9 +282,16 @@
             "name": "x-consent-token",
             "required": false,
             "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "description": "Optional consent token",
-              "title": "X-Consent-Token",
-              "type": "string"
+              "title": "X-Consent-Token"
             }
           },
           {
@@ -271,9 +300,16 @@
             "name": "authorization",
             "required": false,
             "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "description": "The login token. Value should be \"Bearer [token]\"",
-              "title": "Authorization",
-              "type": "string"
+              "title": "Authorization"
             }
           },
           {
@@ -282,9 +318,16 @@
             "name": "x-authorization-provider",
             "required": false,
             "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "description": "The bare domain of the system that provided the token.",
-              "title": "X-Authorization-Provider",
-              "type": "string"
+              "title": "X-Authorization-Provider"
             }
           }
         ],
