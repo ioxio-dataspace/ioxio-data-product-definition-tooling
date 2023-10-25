@@ -14,6 +14,8 @@ from definition_tooling.converter import (
 # On Windows, if the path is not relative, in other words it's absolute, we will end up
 # with some C-Input/C-Output instead of the class names for the Request/Response classes
 # in the final OpenAPI spec files.
+# Below is a link to the issue on GitHub
+# https://github.com/pydantic/pydantic/issues/7860
 definitions_dir = Path(__file__).parent.joinpath("data").relative_to(Path.cwd())
 
 
