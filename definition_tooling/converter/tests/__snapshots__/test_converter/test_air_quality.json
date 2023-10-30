@@ -283,16 +283,10 @@
             "name": "x-consent-token",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "default": "",
               "description": "Optional consent token",
-              "title": "X-Consent-Token"
+              "title": "X-Consent-Token",
+              "type": "string"
             }
           },
           {
@@ -301,16 +295,10 @@
             "name": "authorization",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "default": "",
               "description": "The login token. Value should be \"Bearer [token]\"",
-              "title": "Authorization"
+              "title": "Authorization",
+              "type": "string"
             }
           },
           {

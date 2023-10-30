@@ -71,7 +71,6 @@ def test_required_fields():
         DataProductDefinition(
             title=None,
             description="Description",
-            name="Foo/Bar",
             request=CamelCaseModel,
             response=CamelCaseModel,
         )
@@ -79,7 +78,6 @@ def test_required_fields():
         DataProductDefinition(
             title="Title",
             description=None,
-            name="Foo/Bar",
             request=CamelCaseModel,
             response=CamelCaseModel,
         )
