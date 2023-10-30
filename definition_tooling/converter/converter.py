@@ -140,16 +140,16 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
         authorization_header_type = str
         authorization_header_default_value = ...
     else:
-        authorization_header_type = Optional[str]
-        authorization_header_default_value = None
+        authorization_header_type = str
+        authorization_header_default_value = ""
 
     if definition.requires_consent:
         consent_header_type = str
         consent_header_default_value = ...
         consent_header_description = "Consent token"
     else:
-        consent_header_type = Optional[str]
-        consent_header_default_value = None
+        consent_header_type = str
+        consent_header_default_value = ""
         consent_header_description = "Optional consent token"
 
     responses = {
