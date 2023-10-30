@@ -14,26 +14,26 @@ class BaseApiError(BaseModel):
         return {"model": cls}
 
 
-class ApiErrorOne(BaseApiError):
+class ApiError(BaseApiError):
     type: str = Field(..., title="Error type", description="Error identifier")
     message: str = Field(..., title="Error message", description="Error description")
 
 
-class ApiErrorTwo(BaseApiError):
+class ApiOrExternalError(BaseApiError):
     @classmethod
     def get_response_spec(cls):
         return {"model": cls, "content": {"text/plain": {}, "text/html": {}}}
 
 
-class Unauthorized(ApiErrorOne):
+class Unauthorized(ApiError):
     __status__ = 401
 
 
-class Forbidden(ApiErrorOne):
+class Forbidden(ApiError):
     __status__ = 403
 
 
-class NotFound(ApiErrorOne):
+class NotFound(ApiError):
     __status__ = 404
 
 
@@ -53,7 +53,7 @@ class DataSourceNotFound(BaseApiError):
     )
 
 
-class DataSourceError(ApiErrorOne):
+class DataSourceError(ApiError):
     __status__ = 500
 
 
@@ -65,7 +65,7 @@ class BadGateway(BaseApiError):
     __status__ = 502
 
 
-class ServiceUnavailable(ApiErrorTwo):
+class ServiceUnavailable(ApiOrExternalError):
     """
     This response is reserved by Product Gateway.
     """
@@ -74,7 +74,7 @@ class ServiceUnavailable(ApiErrorTwo):
     message: str = Field("", title="Error message", description="Error description")
 
 
-class GatewayTimeout(ApiErrorTwo):
+class GatewayTimeout(ApiOrExternalError):
     """
     This response is reserved by Product Gateway.
     """
