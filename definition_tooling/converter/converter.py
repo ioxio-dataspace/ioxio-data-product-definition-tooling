@@ -102,7 +102,6 @@ class DataProductDefinition(BaseModel):
     deprecated: bool = False
     description: str
     error_responses: Dict[ERROR_CODE, ErrorModel] = {}
-    name: str = ""
     request: Type[BaseModel]
     requires_authorization: bool = False
     requires_consent: bool = False
@@ -123,7 +122,9 @@ class DataProductDefinition(BaseModel):
         return v
 
 
-def export_openapi_spec(definition: DataProductDefinition) -> dict:
+def export_openapi_spec(
+    definition: DataProductDefinition, definition_name: str
+) -> dict:
     """
     Given a data product definition, create a FastAPI application and a corresponding
     POST route. Then export its OpenAPI spec
@@ -162,7 +163,7 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     responses.update(DATA_PRODUCT_ERRORS)
 
     @app.post(
-        f"/{definition.name}",
+        f"/{definition_name}",
         summary=definition.title,
         description=definition.description,
         response_model=definition.response,
@@ -228,9 +229,9 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
             continue
 
         # Get definition name based on file path
-        definition.name = p.relative_to(src).with_suffix("").as_posix()
+        definition_name = p.relative_to(src).with_suffix("").as_posix()
 
-        openapi = export_openapi_spec(definition)
+        openapi = export_openapi_spec(definition, definition_name)
 
         out_file = (dest / p.relative_to(src)).with_suffix(".json")
 
