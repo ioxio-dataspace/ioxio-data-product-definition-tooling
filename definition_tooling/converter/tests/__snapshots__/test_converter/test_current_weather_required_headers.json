@@ -172,16 +172,10 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "default": "",
             "description": "Error description",
-            "title": "Error message"
+            "title": "Error message",
+            "type": "string"
           }
         },
         "title": "GatewayTimeout",
@@ -224,16 +218,10 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "default": "",
             "description": "Error description",
-            "title": "Error message"
+            "title": "Error message",
+            "type": "string"
           }
         },
         "title": "ServiceUnavailable",
@@ -444,7 +432,9 @@
                 "schema": {
                   "$ref": "#/components/schemas/ServiceUnavailable"
                 }
-              }
+              },
+              "text/html": {},
+              "text/plain": {}
             },
             "description": "Service Unavailable"
           },
@@ -454,7 +444,9 @@
                 "schema": {
                   "$ref": "#/components/schemas/GatewayTimeout"
                 }
-              }
+              },
+              "text/html": {},
+              "text/plain": {}
             },
             "description": "Gateway Timeout"
           },

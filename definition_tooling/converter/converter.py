@@ -102,7 +102,7 @@ class DataProductDefinition(BaseModel):
     deprecated: bool = False
     description: str
     error_responses: Dict[ERROR_CODE, ErrorModel] = {}
-    name: Optional[str] = None
+    name: str = ""
     request: Type[BaseModel]
     requires_authorization: bool = False
     requires_consent: bool = False
