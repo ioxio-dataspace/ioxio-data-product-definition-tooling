@@ -211,11 +211,18 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     should_fail_hook = False
     modified_files = []
     for p in src.glob("**/*.py"):
-        spec = importlib.util.spec_from_file_location(name=str(p), location=str(p))
+        # Get definition name based on file path
+        definition_name = p.relative_to(src).with_suffix("").as_posix()
+
+        # generate a python module name based on the definition name/path
+        module_name = definition_name.replace(".", "_").replace("/", ".")
+        print(p, module_name)
+        spec = importlib.util.spec_from_file_location(name=module_name, location=str(p))
         if not spec.loader:
             raise RuntimeError(f"Failed to import {p} module")
         try:
-            module = spec.loader.load_module(str(p))
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
         except ValidationError as e:
             should_fail_hook = True
             print(styled_error("Validation error", p))
@@ -227,9 +234,6 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
         except AttributeError:
             print(styled_error("Error finding DEFINITION variable", p))
             continue
-
-        # Get definition name based on file path
-        definition_name = p.relative_to(src).with_suffix("").as_posix()
 
         openapi = export_openapi_spec(definition, definition_name)
 

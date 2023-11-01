@@ -10,18 +10,10 @@ from definition_tooling.converter import (
     convert_data_product_definitions,
 )
 
-# This needs to be a relative path to work correctly on Windows!
-# On Windows, if the path is not relative, in other words it's absolute, we will end up
-# with some C-Input/C-Output instead of the class names for the Request/Response classes
-# in the final OpenAPI spec files.
-# Below is a link to the issue on GitHub
-# https://github.com/pydantic/pydantic/issues/7860
-definitions_dir = Path(__file__).parent.joinpath("data").relative_to(Path.cwd())
-
 
 def test_air_quality(tmpdir, json_snapshot):
     out_dir = tmpdir.mkdir("output")
-    convert_data_product_definitions(definitions_dir, Path(out_dir))
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
 
     dest_file = out_dir / "AirQuality" / "Current.json"
     assert dest_file.exists()
@@ -35,7 +27,7 @@ def test_company_basic_info_errors(tmpdir, json_snapshot):
     Test with a definition that includes custom error message
     """
     out_dir = tmpdir.mkdir("output")
-    convert_data_product_definitions(definitions_dir, Path(out_dir))
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
 
     dest_file = out_dir / "Company" / "BasicInfo.json"
     assert dest_file.exists()
@@ -46,7 +38,7 @@ def test_company_basic_info_errors(tmpdir, json_snapshot):
 
 def test_current_weather_required_headers(tmpdir, json_snapshot):
     out_dir = tmpdir.mkdir("output")
-    convert_data_product_definitions(definitions_dir, Path(out_dir))
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
 
     dest_file = out_dir / "Weather" / "Current" / "Metric.json"
     assert dest_file.exists()
@@ -57,7 +49,7 @@ def test_current_weather_required_headers(tmpdir, json_snapshot):
 
 def test_teapot_deprecated(tmpdir, json_snapshot):
     out_dir = tmpdir.mkdir("output")
-    convert_data_product_definitions(definitions_dir, Path(out_dir))
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
 
     dest_file = out_dir / "Appliance" / "CoffeeBrewer.json"
     assert dest_file.exists()
@@ -85,7 +77,7 @@ def test_required_fields():
 
 def test_summary_and_route_description(tmpdir, json_snapshot):
     out_dir = tmpdir.mkdir("output")
-    convert_data_product_definitions(definitions_dir, Path(out_dir))
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
 
     dest_file = out_dir / "AirQuality" / "Current.json"
     assert dest_file.exists()
