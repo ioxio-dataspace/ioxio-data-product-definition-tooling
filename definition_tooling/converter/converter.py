@@ -216,7 +216,6 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
 
         # generate a python module name based on the definition name/path
         module_name = definition_name.replace(".", "_").replace("/", ".")
-        print(p, module_name)
         spec = importlib.util.spec_from_file_location(name=module_name, location=str(p))
         if not spec.loader:
             raise RuntimeError(f"Failed to import {p} module")
