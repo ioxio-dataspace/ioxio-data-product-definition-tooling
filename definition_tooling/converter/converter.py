@@ -2,11 +2,18 @@ import importlib.util
 import json
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional, Type
+from typing import Any, Callable, Dict, List, Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    GetJsonSchemaHandler,
+    ValidationError,
+    field_validator,
+)
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema
 from rich import print
@@ -71,28 +78,39 @@ class PydanticVersion(Version):
     """
     This class is based on:
     https://python-semver.readthedocs.io/en/latest/advanced/combine-pydantic-and-semver.html
-
-    Note: This won't work with Pydantic 2, for more details see:
-    https://docs.pydantic.dev/2.3/migration/
     """
 
     @classmethod
-    def _parse(cls, version):
-        return cls.parse(version)
-
-    @classmethod
     def __get_pydantic_core_schema__(
-        cls, source_type, _handler
+        cls,
+        _source_type: Any,
+        _handler: Callable[[Any], core_schema.CoreSchema],
     ) -> core_schema.CoreSchema:
-        """Return a list of validator methods for pydantic models."""
-        return core_schema.no_info_wrap_validator_function(
-            cls.parse,
-            core_schema.str_schema(),
+        def validate_from_str(value: str) -> Version:
+            return Version.parse(value)
+
+        from_str_schema = core_schema.chain_schema(
+            [
+                core_schema.str_schema(),
+                core_schema.no_info_plain_validator_function(validate_from_str),
+            ]
+        )
+
+        return core_schema.json_or_python_schema(
+            json_schema=from_str_schema,
+            python_schema=core_schema.union_schema(
+                [
+                    core_schema.is_instance_schema(Version),
+                    from_str_schema,
+                ]
+            ),
             serialization=core_schema.to_string_ser_schema(),
         )
 
     @classmethod
-    def __get_pydantic_json_schema__(cls, _core_schema, handler) -> JsonSchemaValue:
+    def __get_pydantic_json_schema__(
+        cls, _core_schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
         """Inject/mutate the pydantic field schema in-place."""
         return handler(core_schema.str_schema())
 
