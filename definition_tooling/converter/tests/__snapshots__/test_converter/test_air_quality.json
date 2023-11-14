@@ -11,7 +11,9 @@
         "properties": {
           "lat": {
             "description": "The latitude coordinate of the desired location",
-            "example": 60.192059,
+            "examples": [
+              60.192059
+            ],
             "maximum": 90.0,
             "minimum": -90.0,
             "title": "Latitude",
@@ -19,7 +21,9 @@
           },
           "lon": {
             "description": "The longitude coordinate of the desired location",
-            "example": 24.945831,
+            "examples": [
+              24.945831
+            ],
             "maximum": 180.0,
             "minimum": -180.0,
             "title": "Longitude",
@@ -37,15 +41,19 @@
         "properties": {
           "airQualityIndex": {
             "description": "Current air quality index.\nRanges:\n0-50 Good;\n51-100 Moderate;\n101-150 Unhealthy For Sensitive Groups;\n151-200 Unhealthy;\n201-300 Very Unhealthy;\n301+ Hazardous",
-            "example": 30,
+            "examples": [
+              30
+            ],
             "minimum": 0.0,
             "title": "Air Quality Index",
             "type": "integer"
           },
           "attribution": {
             "description": "List of text to show required credits to data sources",
-            "example": [
-              "Moscow State environmental monitoring"
+            "examples": [
+              [
+                "Moscow State environmental monitoring"
+              ]
             ],
             "items": {
               "type": "string"
@@ -55,7 +63,9 @@
           },
           "timestamp": {
             "description": "Current timestamp in RFC 3339 format",
-            "example": "2020-04-03T13:00:00Z",
+            "examples": [
+              "2020-04-03T13:00:00Z"
+            ],
             "title": "Timestamp",
             "type": "string"
           }
@@ -145,6 +155,7 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
+            "default": "",
             "description": "Error description",
             "title": "Error message",
             "type": "string"
@@ -190,6 +201,7 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
+            "default": "",
             "description": "Error description",
             "title": "Error message",
             "type": "string"
@@ -258,7 +270,7 @@
     "title": "Air Quality Index",
     "version": "1.0.0"
   },
-  "openapi": "3.0.2",
+  "openapi": "3.1.0",
   "paths": {
     "/AirQuality/Current": {
       "post": {
@@ -271,6 +283,7 @@
             "name": "x-consent-token",
             "required": false,
             "schema": {
+              "default": "",
               "description": "Optional consent token",
               "title": "X-Consent-Token",
               "type": "string"
@@ -282,6 +295,7 @@
             "name": "authorization",
             "required": false,
             "schema": {
+              "default": "",
               "description": "The login token. Value should be \"Bearer [token]\"",
               "title": "Authorization",
               "type": "string"
@@ -293,9 +307,16 @@
             "name": "x-authorization-provider",
             "required": false,
             "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "description": "The bare domain of the system that provided the token.",
-              "title": "X-Authorization-Provider",
-              "type": "string"
+              "title": "X-Authorization-Provider"
             }
           }
         ],
@@ -396,7 +417,9 @@
                 "schema": {
                   "$ref": "#/components/schemas/ServiceUnavailable"
                 }
-              }
+              },
+              "text/html": {},
+              "text/plain": {}
             },
             "description": "Service Unavailable"
           },
@@ -406,7 +429,9 @@
                 "schema": {
                   "$ref": "#/components/schemas/GatewayTimeout"
                 }
-              }
+              },
+              "text/html": {},
+              "text/plain": {}
             },
             "description": "Gateway Timeout"
           },

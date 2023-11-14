@@ -3,18 +3,26 @@ Predefined errors that the product gateway or productizers can return.
 
 These errors can not be overridden by the data product definition itself.
 """
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 
 class BaseApiError(BaseModel):
     __status__: int
 
+    @classmethod
+    def get_response_spec(cls):
+        return {"model": cls}
+
 
 class ApiError(BaseApiError):
     type: str = Field(..., title="Error type", description="Error identifier")
     message: str = Field(..., title="Error message", description="Error description")
+
+
+class ApiOrExternalError(BaseApiError):
+    @classmethod
+    def get_response_spec(cls):
+        return {"model": cls, "content": {"text/plain": {}, "text/html": {}}}
 
 
 class Unauthorized(ApiError):
@@ -57,25 +65,25 @@ class BadGateway(BaseApiError):
     __status__ = 502
 
 
-class ServiceUnavailable(BaseApiError):
+class ServiceUnavailable(ApiOrExternalError):
     """
     This response is reserved by Product Gateway.
     """
 
     __status__ = 503
-    message: Optional[str] = Field(
-        None, title="Error message", description="Error description"
-    )
+    message: str = Field("", title="Error message", description="Error description")
 
 
-class GatewayTimeout(BaseApiError):
+class GatewayTimeout(ApiOrExternalError):
     """
     This response is reserved by Product Gateway.
     """
 
     __status__ = 504
-    message: Optional[str] = Field(
-        None, title="Error message", description="Error description"
+    message: str = Field(
+        "",
+        title="Error message",
+        description="Error description",
     )
 
 
@@ -94,7 +102,7 @@ class DoesNotConformToDefinition(BaseApiError):
 
 
 DATA_PRODUCT_ERRORS = {
-    resp.__status__: {"model": resp}
+    resp.__status__: resp.get_response_spec()
     for resp in [
         Unauthorized,
         Forbidden,

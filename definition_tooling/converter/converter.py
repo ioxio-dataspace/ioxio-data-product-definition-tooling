@@ -2,22 +2,30 @@ import importlib.util
 import json
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional, Type
+from typing import Any, Callable, Dict, List, Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
-from pydantic import BaseModel, ValidationError, conint, validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    GetJsonSchemaHandler,
+    ValidationError,
+    field_validator,
+)
+from pydantic.json_schema import JsonSchemaValue
+from pydantic_core import core_schema
 from rich import print
 from semver import Version
 from stringcase import camelcase
+from typing_extensions import Annotated
 
 from definition_tooling.api_errors import DATA_PRODUCT_ERRORS
 
 
 class CamelCaseModel(BaseModel):
-    class Config:
-        alias_generator = camelcase
-        allow_population_by_field_name = True
+    model_config = ConfigDict(alias_generator=camelcase, populate_by_name=True)
 
 
 class ErrorModel(BaseModel):
@@ -63,37 +71,48 @@ class ErrorResponse:
         )
 
 
-ERROR_CODE = conint(ge=400, lt=600)
+ERROR_CODE = Annotated[int, Field(ge=400, lt=600)]
 
 
 class PydanticVersion(Version):
     """
     This class is based on:
     https://python-semver.readthedocs.io/en/latest/advanced/combine-pydantic-and-semver.html
-
-    Note: This won't work with Pydantic 2, for more details see:
-    https://docs.pydantic.dev/2.3/migration/
     """
 
     @classmethod
-    def _parse(cls, version):
-        return cls.parse(version)
+    def __get_pydantic_core_schema__(
+        cls,
+        _source_type: Any,
+        _handler: Callable[[Any], core_schema.CoreSchema],
+    ) -> core_schema.CoreSchema:
+        def validate_from_str(value: str) -> Version:
+            return Version.parse(value)
 
-    @classmethod
-    def __get_validators__(cls):
-        """Return a list of validator methods for pydantic models."""
-        yield cls._parse
-
-    @classmethod
-    def __modify_schema__(cls, field_schema):
-        """Inject/mutate the pydantic field schema in-place."""
-        field_schema.update(
-            examples=[
-                "1.0.2",
-                "2.15.3-alpha",
-                "21.3.15-beta+12345",
+        from_str_schema = core_schema.chain_schema(
+            [
+                core_schema.str_schema(),
+                core_schema.no_info_plain_validator_function(validate_from_str),
             ]
         )
+
+        return core_schema.json_or_python_schema(
+            json_schema=from_str_schema,
+            python_schema=core_schema.union_schema(
+                [
+                    core_schema.is_instance_schema(Version),
+                    from_str_schema,
+                ]
+            ),
+            serialization=core_schema.to_string_ser_schema(),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, _core_schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        """Inject/mutate the pydantic field schema in-place."""
+        return handler(core_schema.str_schema())
 
 
 class DataProductDefinition(BaseModel):
@@ -101,14 +120,14 @@ class DataProductDefinition(BaseModel):
     deprecated: bool = False
     description: str
     error_responses: Dict[ERROR_CODE, ErrorModel] = {}
-    name: Optional[str]
     request: Type[BaseModel]
     requires_authorization: bool = False
     requires_consent: bool = False
     response: Type[BaseModel]
     title: str
 
-    @validator("error_responses")
+    @field_validator("error_responses")
+    @classmethod
     def validate_error_responses(cls, v: Dict[ERROR_CODE, ErrorModel]):
         status_codes = set(v.keys())
         reserved_status_codes = set(DATA_PRODUCT_ERRORS.keys())
@@ -121,7 +140,9 @@ class DataProductDefinition(BaseModel):
         return v
 
 
-def export_openapi_spec(definition: DataProductDefinition) -> dict:
+def export_openapi_spec(
+    definition: DataProductDefinition, definition_name: str
+) -> dict:
     """
     Given a data product definition, create a FastAPI application and a corresponding
     POST route. Then export its OpenAPI spec
@@ -138,16 +159,16 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
         authorization_header_type = str
         authorization_header_default_value = ...
     else:
-        authorization_header_type = Optional[str]
-        authorization_header_default_value = None
+        authorization_header_type = str
+        authorization_header_default_value = ""
 
     if definition.requires_consent:
         consent_header_type = str
         consent_header_default_value = ...
         consent_header_description = "Consent token"
     else:
-        consent_header_type = Optional[str]
-        consent_header_default_value = None
+        consent_header_type = str
+        consent_header_default_value = ""
         consent_header_description = "Optional consent token"
 
     responses = {
@@ -160,7 +181,7 @@ def export_openapi_spec(definition: DataProductDefinition) -> dict:
     responses.update(DATA_PRODUCT_ERRORS)
 
     @app.post(
-        f"/{definition.name}",
+        f"/{definition_name}",
         summary=definition.title,
         description=definition.description,
         response_model=definition.response,
@@ -208,11 +229,17 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
     should_fail_hook = False
     modified_files = []
     for p in src.glob("**/*.py"):
-        spec = importlib.util.spec_from_file_location(name=str(p), location=str(p))
+        # Get definition name based on file path
+        definition_name = p.relative_to(src).with_suffix("").as_posix()
+
+        # generate a python module name based on the definition name/path
+        module_name = definition_name.replace(".", "_").replace("/", ".")
+        spec = importlib.util.spec_from_file_location(name=module_name, location=str(p))
         if not spec.loader:
             raise RuntimeError(f"Failed to import {p} module")
         try:
-            module = spec.loader.load_module(str(p))
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
         except ValidationError as e:
             should_fail_hook = True
             print(styled_error("Validation error", p))
@@ -225,10 +252,7 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
             print(styled_error("Error finding DEFINITION variable", p))
             continue
 
-        # Get definition name based on file path
-        definition.name = p.relative_to(src).with_suffix("").as_posix()
-
-        openapi = export_openapi_spec(definition)
+        openapi = export_openapi_spec(definition, definition_name)
 
         out_file = (dest / p.relative_to(src)).with_suffix(".json")
 

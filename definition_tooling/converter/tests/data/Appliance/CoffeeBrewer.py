@@ -12,7 +12,7 @@ class CoffeeBrewingRequest(CamelCaseModel):
         ...,
         title="Brew",
         description="Kind of drink to brew",
-        example="coffee",
+        examples=["coffee"],
     )
 
 
@@ -20,7 +20,7 @@ class CoffeeBrewingResponse(CamelCaseModel):
     ok: bool = Field(
         ...,
         title="OK",
-        example=True,
+        examples=[True],
     )
 
 
@@ -29,12 +29,12 @@ class TeaPotError(CamelCaseModel):
     ok: bool = Field(
         ...,
         title="OK",
-        example=False,
+        examples=[False],
     )
     error_message: str = Field(
         ...,
         title="Error message",
-        example="I'm a teapot",
+        examples=["I'm a teapot"],
     )
 
 
