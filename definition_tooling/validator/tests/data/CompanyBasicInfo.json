@@ -107,6 +107,16 @@
               }
             }
           },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitExceeded"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
           "444": {
             "description": "Additional Response",
             "content": {
@@ -312,6 +322,19 @@
             "description": "Error description"
           }
         }
+      },
+      "RateLimitExceeded": {
+        "description": "This response is reserved by Product Gateway.",
+        "properties": {
+          "message": {
+            "default": "Rate limit exceeded",
+            "description": "Error description",
+            "title": "Error message",
+            "type": "string"
+          }
+        },
+        "title": "RateLimitExceeded",
+        "type": "object"
       },
       "ServiceUnavailable": {
         "title": "ServiceUnavailable",

@@ -41,6 +41,19 @@ class NotFound(ApiError):
 # Note: 422 is added automatically by FastAPI
 
 
+class RateLimitExceeded(BaseApiError):
+    """
+    This response is reserved by Product Gateway.
+    """
+
+    __status__ = 429
+    message: str = Field(
+        "Rate limit exceeded",
+        title="Error message",
+        description="Error description",
+    )
+
+
 class DataSourceNotFound(BaseApiError):
     """
     This response is reserved by Product Gateway.
@@ -108,6 +121,7 @@ DATA_PRODUCT_ERRORS = {
         Unauthorized,
         Forbidden,
         NotFound,
+        RateLimitExceeded,
         DataSourceNotFound,
         DataSourceError,
         BadGateway,
