@@ -3,6 +3,7 @@ Predefined errors that the product gateway or productizers can return.
 
 These errors can not be overridden by the data product definition itself.
 """
+
 from pydantic import BaseModel, Field
 
 
