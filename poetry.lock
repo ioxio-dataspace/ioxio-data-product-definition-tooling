@@ -1039,16 +1039,6 @@ typing-extensions = {version = ">=3.10.0", markers = "python_version < \"3.10\""
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
-name = "stringcase"
-version = "1.2.0"
-description = "String case converter."
-optional = false
-python-versions = "*"
-files = [
-    {file = "stringcase-1.2.0.tar.gz", hash = "sha256:48a06980661908efe8d9d34eab2b6c13aefa2163b3ced26972902e3bdfd87008"},
-]
-
-[[package]]
 name = "syrupy"
 version = "4.0.2"
 description = "Pytest Snapshot Test Utility"
@@ -1430,4 +1420,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9.0,<4"
-content-hash = "1b5290c31154f942e81a8053d32837d85d352d4b059c7b75ef231a89d1ad10aa"
+content-hash = "121fbb2a59d46957b8fc3c9b173658b53cfb042c3ee94ba55938da995cf352be"

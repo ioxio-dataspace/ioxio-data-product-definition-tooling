@@ -14,18 +14,18 @@ from pydantic import (
     ValidationError,
     field_validator,
 )
+from pydantic.alias_generators import to_camel
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema
 from rich import print
 from semver import Version
-from stringcase import camelcase
 from typing_extensions import Annotated
 
 from definition_tooling.api_errors import DATA_PRODUCT_ERRORS
 
 
 class CamelCaseModel(BaseModel):
-    model_config = ConfigDict(alias_generator=camelcase, populate_by_name=True)
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 class ErrorModel(BaseModel):

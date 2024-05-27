@@ -19,7 +19,6 @@ python = ">=3.9.0,<4"
 typer = {version = "^0.12.3", extras = ["all"]}
 deepdiff = "^7.0.1"
 fastapi = "^0.111.0"
-stringcase = "^1.2.0"
 pydantic = {version = "^2.7.1", extras = ["email"]}
 semver = "^3.0.2"
 
