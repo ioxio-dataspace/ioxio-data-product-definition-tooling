@@ -3,6 +3,7 @@ Predefined errors that the product gateway or productizers can return.
 
 These errors can not be overridden by the data product definition itself.
 """
+
 from pydantic import BaseModel, Field
 
 
@@ -38,6 +39,19 @@ class NotFound(ApiError):
 
 
 # Note: 422 is added automatically by FastAPI
+
+
+class RateLimitExceeded(BaseApiError):
+    """
+    This response is reserved by Product Gateway.
+    """
+
+    __status__ = 429
+    message: str = Field(
+        "Rate limit exceeded",
+        title="Error message",
+        description="Error description",
+    )
 
 
 class DataSourceNotFound(BaseApiError):
@@ -107,6 +121,7 @@ DATA_PRODUCT_ERRORS = {
         Unauthorized,
         Forbidden,
         NotFound,
+        RateLimitExceeded,
         DataSourceNotFound,
         DataSourceError,
         BadGateway,
