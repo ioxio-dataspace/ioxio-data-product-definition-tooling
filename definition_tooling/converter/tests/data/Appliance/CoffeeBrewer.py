@@ -48,4 +48,5 @@ DEFINITION = DataProductDefinition(
         418: TeaPotError,
     },
     deprecated=True,
+    tags=["coffee", "brewer", "coffee"],
 )

@@ -466,7 +466,11 @@
             "description": "Additional Response"
           }
         },
-        "summary": "Coffee brewer"
+        "summary": "Coffee brewer",
+        "tags": [
+          "brewer",
+          "coffee"
+        ]
       }
     }
   }
