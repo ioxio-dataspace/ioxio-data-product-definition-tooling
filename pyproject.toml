@@ -18,7 +18,7 @@ validate-definitions = "definition_tooling.validator.cli:cli"
 python = ">=3.9.0,<4"
 typer = {version = "^0.12.3", extras = ["all"]}
 deepdiff = "^7.0.1"
-fastapi = "^0.111.0"
+fastapi-slim = "^0.111.0"
 pydantic = {version = "^2.7.4", extras = ["email"]}
 semver = "^3.0.2"
 

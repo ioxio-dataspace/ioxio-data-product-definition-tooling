@@ -1,6 +1,0 @@
-ignore:
-  CVE-2019-8341:
-  - expires: 2024-10-01T00:00:00+0000
-    package: jinja2
-    reason: 'Not using any untrusted Jinja2 templates and no fix available'
-version: '1.1'
