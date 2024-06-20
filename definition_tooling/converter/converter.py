@@ -2,7 +2,7 @@ import importlib.util
 import json
 import subprocess
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Type
+from typing import Any, Callable, Dict, Iterable, List, Optional, Type
 
 from deepdiff import DeepDiff
 from fastapi import FastAPI, Header
@@ -125,6 +125,7 @@ class DataProductDefinition(BaseModel):
     requires_consent: bool = False
     response: Type[BaseModel]
     title: str
+    tags: Iterable[str] = []
 
     @field_validator("error_responses")
     @classmethod
@@ -187,6 +188,7 @@ def export_openapi_spec(
         response_model=definition.response,
         responses=responses,
         deprecated=definition.deprecated,
+        tags=sorted(set(definition.tags)),
     )
     def request(
         params: definition.request,

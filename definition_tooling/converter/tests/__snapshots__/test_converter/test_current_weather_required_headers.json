@@ -484,7 +484,13 @@
             "description": "Additional Response"
           }
         },
-        "summary": "Current weather in a given location"
+        "summary": "Current weather in a given location",
+        "tags": [
+          "humidity",
+          "rain",
+          "temperature",
+          "wind"
+        ]
       }
     }
   }

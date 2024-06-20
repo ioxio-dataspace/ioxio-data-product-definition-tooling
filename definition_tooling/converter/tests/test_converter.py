@@ -91,3 +91,22 @@ def test_summary_and_route_description(tmpdir, json_snapshot):
     desc = dest_spec["info"]["description"]
     route_desc = dest_spec["paths"]["/AirQuality/Current"]["post"]["description"]
     assert desc == route_desc
+
+
+def test_tags(tmpdir, json_snapshot):
+    out_dir = tmpdir.mkdir("output")
+    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
+
+    weather_file = out_dir / "Weather" / "Current" / "Metric.json"
+    assert weather_file.exists()
+    weather_spec = json.loads(weather_file.read_text("utf-8"))
+    weather_tags = weather_spec["paths"]["/Weather/Current/Metric"]["post"]["tags"]
+    # Check tags are alphabetically ordered and no duplicates
+    assert weather_tags == ["humidity", "rain", "temperature", "wind"]
+
+    coffee_file = out_dir / "Appliance" / "CoffeeBrewer.json"
+    assert coffee_file.exists()
+    coffee_spec = json.loads(coffee_file.read_text("utf-8"))
+    coffee_tags = coffee_spec["paths"]["/Appliance/CoffeeBrewer"]["post"]["tags"]
+    # Check tags are alphabetically ordered and no duplicates
+    assert coffee_tags == ["brewer", "coffee"]
