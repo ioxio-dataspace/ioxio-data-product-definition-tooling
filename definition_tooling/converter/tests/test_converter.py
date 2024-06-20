@@ -104,11 +104,9 @@ def test_tags(tmpdir, json_snapshot):
     # Check tags are alphabetically ordered and no duplicates
     assert weather_tags == ["humidity", "rain", "temperature", "wind"]
 
-    coffee_brewer_file = out_dir / "Appliance" / "CoffeeBrewer.json"
-    assert coffee_brewer_file.exists()
-    coffee_brewer_spec = json.loads(coffee_brewer_file.read_text("utf-8"))
-    coffee_brewer_tags = coffee_brewer_spec["paths"]["/Appliance/CoffeeBrewer"]["post"][
-        "tags"
-    ]
+    coffee_file = out_dir / "Appliance" / "CoffeeBrewer.json"
+    assert coffee_file.exists()
+    coffee_spec = json.loads(coffee_file.read_text("utf-8"))
+    coffee_tags = coffee_spec["paths"]["/Appliance/CoffeeBrewer"]["post"]["tags"]
     # Check tags are alphabetically ordered and no duplicates
-    assert coffee_brewer_tags == ["brewer", "coffee"]
+    assert coffee_tags == ["brewer", "coffee"]
