@@ -48,5 +48,6 @@ DEFINITION = DataProductDefinition(
         418: TeaPotError,
     },
     deprecated=True,
+    # On purpose duplicate tag to verify the final spec doesn't have any duplicates
     tags=["coffee", "brewer", "coffee"],
 )
