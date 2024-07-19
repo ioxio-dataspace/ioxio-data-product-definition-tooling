@@ -318,6 +318,24 @@
               "description": "The bare domain of the system that provided the token.",
               "title": "X-Authorization-Provider"
             }
+          },
+          {
+            "description": "API token",
+            "in": "header",
+            "name": "x-api-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "API token",
+              "title": "X-Api-Token"
+            }
           }
         ],
         "requestBody": {
