@@ -203,6 +203,9 @@ def export_openapi_spec(
         x_authorization_provider: Optional[str] = Header(
             None, description="The bare domain of the system that provided the token."
         ),
+        x_api_key: Optional[str] = Header(
+            None, title="X-API-Key", description="API key or token"
+        ),
     ):
         pass
 
