@@ -362,7 +362,7 @@
                 }
               ],
               "description": "API key or token",
-              "title": "X-API-Token"
+              "title": "X-API-Key"
             }
           }
         ],
