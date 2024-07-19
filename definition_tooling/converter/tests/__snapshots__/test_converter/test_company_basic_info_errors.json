@@ -287,9 +287,9 @@
             }
           },
           {
-            "description": "API token",
+            "description": "API key or token",
             "in": "header",
-            "name": "x-api-token",
+            "name": "x-api-key",
             "required": false,
             "schema": {
               "anyOf": [
@@ -300,8 +300,8 @@
                   "type": "null"
                 }
               ],
-              "description": "API token",
-              "title": "X-Api-Token"
+              "description": "API key or token",
+              "title": "X-API-Token"
             }
           }
         ],
