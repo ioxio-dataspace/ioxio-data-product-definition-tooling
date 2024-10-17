@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ioxio-data-product-definition-tooling"
-version = "0.8.0"
+version = "0.9.0"
 description = "IOXIO Data Product Definition Tooling"
 authors = ["IOXIO Ltd"]
 license = "BSD-3-Clause"
@@ -16,21 +16,24 @@ validate-definitions = "definition_tooling.validator.cli:cli"
 
 [tool.poetry.dependencies]
 python = ">=3.9.0,<4"
-typer = {version = "^0.12.3", extras = ["all"]}
-deepdiff = "^7.0.1"
-fastapi-slim = "^0.111.0"
-pydantic = {version = "^2.7.4", extras = ["email"]}
+typer = {version = "^0.12.5", extras = ["all"]}
+deepdiff = "^8.0.1"
+fastapi-slim = "^0.115.2"
+pydantic = {version = "^2.9.2", extras = ["email"]}
 semver = "^3.0.2"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"
-pytest = "^8.2.1"
-pytest-asyncio = "^0.23.7"
-flake8 = "^7.0.0"
-mypy = "^1.10.0"
-black = "^24.4.2"
-syrupy = "^4.6.1"
+pytest = "^8.3.3"
+pytest-asyncio = "^0.24.0"
+flake8 = "^7.1.1"
+mypy = "^1.12.0"
+black = "^24.10.0"
+syrupy = "^4.7.2"
 invoke = "^2.2.0"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.skjold]
 report_only = false
