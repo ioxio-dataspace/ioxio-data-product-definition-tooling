@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ioxio-data-product-definition-tooling"
-version = "0.9.0"
+version = "0.10.0"
 description = "IOXIO Data Product Definition Tooling"
 authors = ["IOXIO Ltd"]
 license = "BSD-3-Clause"
@@ -16,11 +16,11 @@ validate-definitions = "definition_tooling.validator.cli:cli"
 
 [tool.poetry.dependencies]
 python = ">=3.9.0,<4"
-typer = {version = "^0.12.5", extras = ["all"]}
-deepdiff = "^8.0.1"
-fastapi-slim = "^0.115.2"
-pydantic = {version = "^2.9.2", extras = ["email"]}
-semver = "^3.0.2"
+typer = {version = "^0.15.2", extras = ["all"]}
+deepdiff = "^8.3.0"
+fastapi-slim = "^0.115.11"
+pydantic = {version = "^2.10.6", extras = ["email"]}
+semver = "^3.0.4"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"
