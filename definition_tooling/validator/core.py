@@ -31,7 +31,7 @@ def validate_version(spec: dict, spec_path: Path, root_path: Path):
     """
     Validate version in definition and filename.
 
-    Definitions in "test/" and "draft/" namespaces should:
+    Definitions in "test/" namespace should:
     - have versions < 0.1.0
     - not have any version in the filename
 
@@ -51,10 +51,9 @@ def validate_version(spec: dict, spec_path: Path, root_path: Path):
         raise err.InvalidOrMissingVersion
 
     test_definition = spec_path.is_relative_to(root_path / "test")
-    draft_definition = spec_path.is_relative_to(root_path / "draft")
     _, __, file_version_str = spec_path.stem.partition("_v")
 
-    if test_definition or draft_definition:
+    if test_definition:
         if file_version_str:
             raise err.UnexpectedVersionInFilename
         if version >= Version.parse("0.1.0"):

@@ -92,15 +92,15 @@ class InvalidOrMissingVersion(VersionError):
 
 
 class UnexpectedVersionInFilename(VersionError):
-    msg = "Test or draft definition should not have version in filename"
+    msg = "Test definition should not have version in filename"
 
 
 class TooHighVersion(VersionError):
-    msg = "Test and draft definition should have version < 0.1.0"
+    msg = "Test definition should have version < 0.1.0"
 
 
 class TooLowVersion(VersionError):
-    msg = "Definition (not test or draft) should have version >= 0.1.0"
+    msg = "Definition (not test) should have version >= 0.1.0"
 
 
 class InvalidOrMissingVersionInFileName(VersionError):

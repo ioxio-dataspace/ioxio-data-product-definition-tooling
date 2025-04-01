@@ -61,7 +61,6 @@ def test_invalid_version(check_version_error, spec, version: str):
 @pytest.mark.parametrize(
     "folder",
     [
-        "draft",
         "test",
     ],
 )
@@ -75,8 +74,6 @@ def test_version_in_filename_when_not_expected(check_version_error, spec, folder
 @pytest.mark.parametrize(
     "folder,version",
     [
-        ["draft", "1.0.0"],
-        ["draft", "0.1.0"],
         ["test", "1.0.0"],
         ["test", "0.1.0"],
     ],
@@ -133,8 +130,6 @@ def test_version_missmatch(check_version_error, spec, version: str, file_version
     [
         ["0.0.1", "test/Company/BasicInfo"],
         ["0.0.2", "test/Company/BasicInfo"],
-        ["0.0.1", "draft/Company/BasicInfo"],
-        ["0.0.200", "draft/Company/BasicInfo"],
         ["0.1.0", "Company/BasicInfo_v0.1"],
         ["0.1.1", "Company/BasicInfo_v0.1"],
         ["0.1.2", "Company/BasicInfo_v0.1"],
