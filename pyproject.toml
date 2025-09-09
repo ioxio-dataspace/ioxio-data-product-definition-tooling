@@ -17,7 +17,7 @@ validate-definitions = "definition_tooling.validator.cli:cli"
 [tool.poetry.dependencies]
 python = "^3.9"
 typer = {version = "^0.16.0", extras = ["all"]}
-deepdiff = "^8.5.0"
+deepdiff = "^8.6.1"
 fastapi = "^0.116.1"
 pydantic = {version = "^2.11.7", extras = ["email"]}
 semver = "^3.0.4"
