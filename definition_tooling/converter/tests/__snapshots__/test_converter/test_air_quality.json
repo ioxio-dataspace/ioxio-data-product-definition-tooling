@@ -490,5 +490,6 @@
         "summary": "Air Quality Index"
       }
     }
-  }
+  },
+  "x-strict-validation": true
 }

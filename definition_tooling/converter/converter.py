@@ -126,6 +126,7 @@ class DataProductDefinition(BaseModel):
     response: Type[BaseModel]
     title: str
     tags: Iterable[str] = []
+    strict_validation: bool = True
 
     @field_validator("error_responses")
     @classmethod
@@ -142,12 +143,15 @@ class DataProductDefinition(BaseModel):
 
 
 def export_openapi_spec(
-    definition: DataProductDefinition, definition_name: str
+    definition: DataProductDefinition,
+    definition_name: str,
 ) -> dict:
     """
     Given a data product definition, create a FastAPI application and a corresponding
     POST route. Then export its OpenAPI spec
+
     :param definition: Data product definition
+    :param definition_name: Name of the definition, e.g. AirQuality/Current_v0.1
     :return: OpenAPI spec
     """
     app = FastAPI(
@@ -214,6 +218,8 @@ def export_openapi_spec(
     for path, data in openapi["paths"].items():
         operation_id = data["post"]["operationId"].removesuffix("_post")
         openapi["paths"][path]["post"]["operationId"] = operation_id
+
+    openapi["x-strict-validation"] = definition.strict_validation
 
     return openapi
 

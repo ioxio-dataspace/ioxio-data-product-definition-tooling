@@ -511,5 +511,6 @@
         ]
       }
     }
-  }
+  },
+  "x-strict-validation": true
 }

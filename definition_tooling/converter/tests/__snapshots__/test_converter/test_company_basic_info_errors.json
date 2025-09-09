@@ -444,5 +444,6 @@
         "summary": "Information about a company"
       }
     }
-  }
+  },
+  "x-strict-validation": true
 }
