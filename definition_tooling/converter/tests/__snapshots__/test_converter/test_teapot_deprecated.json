@@ -491,5 +491,6 @@
         ]
       }
     }
-  }
+  },
+  "x-strict-validation": false
 }

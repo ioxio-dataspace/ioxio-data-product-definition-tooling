@@ -53,5 +53,6 @@ DEFINITION = DataProductDefinition(
     response=CurrentWeatherMetricResponse,
     requires_authorization=True,
     requires_consent=True,
+    strict_validation=True,
     tags={"temperature", "wind", "rain", "humidity"},
 )
