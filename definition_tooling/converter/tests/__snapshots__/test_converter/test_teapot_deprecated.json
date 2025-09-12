@@ -2,6 +2,7 @@
   "components": {
     "schemas": {
       "BadGateway": {
+        "additionalProperties": false,
         "description": "This response is reserved by Product Gateway.",
         "properties": {},
         "title": "BadGateway",
@@ -41,6 +42,7 @@
         "type": "object"
       },
       "DataSourceError": {
+        "additionalProperties": false,
         "properties": {
           "message": {
             "description": "Error description",
@@ -61,6 +63,7 @@
         "type": "object"
       },
       "DataSourceNotFound": {
+        "additionalProperties": false,
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
@@ -74,6 +77,7 @@
         "type": "object"
       },
       "DoesNotConformToDefinition": {
+        "additionalProperties": false,
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "data_source_status_code": {
@@ -94,6 +98,7 @@
         "type": "object"
       },
       "Forbidden": {
+        "additionalProperties": false,
         "properties": {
           "message": {
             "description": "Error description",
@@ -114,6 +119,7 @@
         "type": "object"
       },
       "GatewayTimeout": {
+        "additionalProperties": false,
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
@@ -140,6 +146,7 @@
         "type": "object"
       },
       "NotFound": {
+        "additionalProperties": false,
         "properties": {
           "message": {
             "description": "Error description",
@@ -160,6 +167,7 @@
         "type": "object"
       },
       "RateLimitExceeded": {
+        "additionalProperties": false,
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
@@ -173,6 +181,7 @@
         "type": "object"
       },
       "ServiceUnavailable": {
+        "additionalProperties": false,
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
@@ -210,6 +219,7 @@
         "type": "object"
       },
       "Unauthorized": {
+        "additionalProperties": false,
         "properties": {
           "message": {
             "description": "Error description",

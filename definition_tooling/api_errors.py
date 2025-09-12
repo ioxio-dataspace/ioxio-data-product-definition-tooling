@@ -1,13 +1,15 @@
 """
-Predefined errors that the product gateway or productizers can return.
+Predefined errors that the product gateway or data sources can return.
 
 These errors can not be overridden by the data product definition itself.
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class BaseApiError(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     __status__: int
 
     @classmethod
