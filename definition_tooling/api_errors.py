@@ -1,13 +1,15 @@
 """
-Predefined errors that the product gateway or productizers can return.
+Predefined errors that the product gateway or data sources can return.
 
 These errors can not be overridden by the data product definition itself.
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 
 
 class BaseApiError(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     __status__: int
 
     @classmethod
@@ -16,8 +18,16 @@ class BaseApiError(BaseModel):
 
 
 class ApiError(BaseApiError):
-    type: str = Field(..., title="Error type", description="Error identifier")
-    message: str = Field(..., title="Error message", description="Error description")
+    type: StrictStr = Field(
+        ...,
+        title="Error type",
+        description="Error identifier",
+    )
+    message: StrictStr = Field(
+        ...,
+        title="Error message",
+        description="Error description",
+    )
 
 
 class ApiOrExternalError(BaseApiError):
@@ -47,7 +57,7 @@ class RateLimitExceeded(BaseApiError):
     """
 
     __status__ = 429
-    message: str = Field(
+    message: StrictStr = Field(
         "Rate limit exceeded",
         title="Error message",
         description="Error description",
@@ -60,7 +70,7 @@ class DataSourceNotFound(BaseApiError):
     """
 
     __status__ = 444
-    message: str = Field(
+    message: StrictStr = Field(
         "Data source not found",
         title="Error message",
         description="Error description",
@@ -85,7 +95,11 @@ class ServiceUnavailable(ApiOrExternalError):
     """
 
     __status__ = 503
-    message: str = Field("", title="Error message", description="Error description")
+    message: StrictStr = Field(
+        "",
+        title="Error message",
+        description="Error description",
+    )
 
 
 class GatewayTimeout(ApiOrExternalError):
@@ -94,7 +108,7 @@ class GatewayTimeout(ApiOrExternalError):
     """
 
     __status__ = 504
-    message: str = Field(
+    message: StrictStr = Field(
         "",
         title="Error message",
         description="Error description",
@@ -107,8 +121,8 @@ class DoesNotConformToDefinition(BaseApiError):
     """
 
     __status__ = 550
-    message: str = "Response from data source does not conform to definition"
-    data_source_status_code: int = Field(
+    message: StrictStr = "Response from data source does not conform to definition"
+    data_source_status_code: StrictInt = Field(
         ...,
         title="Data source status code",
         description="HTTP status code returned from the data source",
