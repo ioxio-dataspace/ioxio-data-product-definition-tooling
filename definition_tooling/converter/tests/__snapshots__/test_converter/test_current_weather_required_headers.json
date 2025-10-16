@@ -4,7 +4,26 @@
       "BadGateway": {
         "additionalProperties": false,
         "description": "This response is reserved by Product Gateway.",
-        "properties": {},
+        "properties": {
+          "message": {
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Bad Gateway"
+            ],
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "const": "bad_gateway",
+            "description": "An identifier for the type of error.",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "BadGateway",
         "type": "object"
       },
@@ -100,12 +119,19 @@
         "additionalProperties": false,
         "properties": {
           "message": {
-            "description": "Error description",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Failed to connect to the upstream service, please try again later."
+            ],
             "title": "Error message",
             "type": "string"
           },
           "type": {
-            "description": "Error identifier",
+            "description": "An identifier for the type of error.",
+            "examples": [
+              "upstream_error"
+            ],
+            "pattern": "^[a-z0-9_]*$",
             "title": "Error type",
             "type": "string"
           }
@@ -122,12 +148,24 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
-            "default": "Data source not found",
-            "description": "Error description",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Data source not found"
+            ],
             "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "const": "data_source_not_found",
+            "description": "An identifier for the type of error.",
+            "title": "Error type",
             "type": "string"
           }
         },
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "DataSourceNotFound",
         "type": "object"
       },
@@ -137,16 +175,30 @@
         "properties": {
           "data_source_status_code": {
             "description": "HTTP status code returned from the data source",
+            "examples": [
+              200
+            ],
             "title": "Data source status code",
             "type": "integer"
           },
           "message": {
-            "default": "Response from data source does not conform to definition",
-            "title": "Message",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Response from data source does not conform to definition"
+            ],
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "const": "does_not_conform_to_definition",
+            "description": "An identifier for the type of error.",
+            "title": "Error type",
             "type": "string"
           }
         },
         "required": [
+          "type",
+          "message",
           "data_source_status_code"
         ],
         "title": "DoesNotConformToDefinition",
@@ -156,12 +208,19 @@
         "additionalProperties": false,
         "properties": {
           "message": {
-            "description": "Error description",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "No access to requested data for group 'example'."
+            ],
             "title": "Error message",
             "type": "string"
           },
           "type": {
-            "description": "Error identifier",
+            "description": "An identifier for the type of error.",
+            "examples": [
+              "forbidden"
+            ],
+            "pattern": "^[a-z0-9_]*$",
             "title": "Error type",
             "type": "string"
           }
@@ -178,12 +237,24 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
-            "default": "",
-            "description": "Error description",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Gateway Timeout"
+            ],
             "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "const": "gateway_timeout",
+            "description": "An identifier for the type of error.",
+            "title": "Error type",
             "type": "string"
           }
         },
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "GatewayTimeout",
         "type": "object"
       },
@@ -204,12 +275,19 @@
         "additionalProperties": false,
         "properties": {
           "message": {
-            "description": "Error description",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Not found"
+            ],
             "title": "Error message",
             "type": "string"
           },
           "type": {
-            "description": "Error identifier",
+            "description": "An identifier for the type of error.",
+            "examples": [
+              "not_found"
+            ],
+            "pattern": "^[a-z0-9_]*$",
             "title": "Error type",
             "type": "string"
           }
@@ -226,12 +304,27 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
-            "default": "Rate limit exceeded",
-            "description": "Error description",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Rate limit exceeded"
+            ],
             "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "An identifier for the type of error.",
+            "examples": [
+              "rate_limit_exceeded"
+            ],
+            "pattern": "^[a-z0-9_]*$",
+            "title": "Error type",
             "type": "string"
           }
         },
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "RateLimitExceeded",
         "type": "object"
       },
@@ -240,12 +333,24 @@
         "description": "This response is reserved by Product Gateway.",
         "properties": {
           "message": {
-            "default": "",
-            "description": "Error description",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Service Unavailable"
+            ],
             "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "const": "service_unavailable",
+            "description": "An identifier for the type of error.",
+            "title": "Error type",
             "type": "string"
           }
         },
+        "required": [
+          "type",
+          "message"
+        ],
         "title": "ServiceUnavailable",
         "type": "object"
       },
@@ -253,12 +358,19 @@
         "additionalProperties": false,
         "properties": {
           "message": {
-            "description": "Error description",
+            "description": "A human readable description of the error.",
+            "examples": [
+              "The API token has expired"
+            ],
             "title": "Error message",
             "type": "string"
           },
           "type": {
-            "description": "Error identifier",
+            "description": "An identifier for the type of error.",
+            "examples": [
+              "api_token_missing_or_invalid"
+            ],
+            "pattern": "^[a-z0-9_]*$",
             "title": "Error type",
             "type": "string"
           }
