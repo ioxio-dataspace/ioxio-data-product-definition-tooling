@@ -77,6 +77,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -187,6 +197,27 @@
         "title": "BadGateway",
         "type": "object",
         "properties": {}
+      },
+      "BadRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "description": "A human readable description of the error.",
+            "example": "Validation failed for fieldName: error description.",
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "An identifier for the type of error.",
+            "example": "validation_error",
+            "pattern": "^[a-z0-9_]*$",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": ["type", "message"],
+        "title": "BadRequest",
+        "type": "object"
       },
       "BasicCompanyInfoRequest": {
         "title": "BasicCompanyInfoRequest",

@@ -51,6 +51,14 @@ class ApiOrExternalError(ApiError):
         return {"model": cls, "content": {"text/plain": {}, "text/html": {}}}
 
 
+class BadRequest(ApiError):
+    __status__ = 400
+    type: StrictStr = type_field(examples=["validation_error"])
+    message: StrictStr = message_field(
+        examples=["Validation failed for fieldName: error description."]
+    )
+
+
 class Unauthorized(ApiError):
     __status__ = 401
     type: StrictStr = type_field(examples=["api_token_missing_or_invalid"])
@@ -155,6 +163,7 @@ class DoesNotConformToDefinition(ApiError):
 DATA_PRODUCT_ERRORS = {
     resp.__status__: resp.get_response_spec()
     for resp in [
+        BadRequest,
         Unauthorized,
         Forbidden,
         NotFound,

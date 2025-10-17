@@ -27,6 +27,34 @@
         "title": "BadGateway",
         "type": "object"
       },
+      "BadRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "description": "A human readable description of the error.",
+            "examples": [
+              "Validation failed for fieldName: error description."
+            ],
+            "title": "Error message",
+            "type": "string"
+          },
+          "type": {
+            "description": "An identifier for the type of error.",
+            "examples": [
+              "validation_error"
+            ],
+            "pattern": "^[a-z0-9_]*$",
+            "title": "Error type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "message"
+        ],
+        "title": "BadRequest",
+        "type": "object"
+      },
       "CurrentAirQualityRequest": {
         "properties": {
           "lat": {
@@ -493,6 +521,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            },
+            "description": "Bad Request"
           },
           "401": {
             "content": {
