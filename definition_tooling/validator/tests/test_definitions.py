@@ -15,11 +15,22 @@ def spec(company_basic_info):
     yield company_basic_info
 
 
-def check_validation_error(tmp_path, spec: dict, exception):
+def check_validation_error(
+    tmp_path,
+    spec: dict,
+    exception,
+    authorization_headers: bool = False,
+    consent_headers: bool = False,
+):
     spec_path = tmp_path / "BasicInfo_v1.0.json"
     spec_path.write_text(json.dumps(spec))
     with pytest.raises(exception):
-        DefinitionValidator(spec_path=spec_path, root_path=tmp_path).validate()
+        DefinitionValidator(
+            spec_path=spec_path,
+            root_path=tmp_path,
+            authorization_headers=authorization_headers,
+            consent_headers=consent_headers,
+        ).validate()
 
 
 @pytest.mark.parametrize("method", ["get", "put", "delete"])
@@ -99,14 +110,29 @@ def test_non_existing_component_defined_in_response(tmp_path, spec):
 
 
 def test_auth_header_is_missing(tmp_path, spec):
-    x_app_provider_header = {
+    x_auth_provider_header = {
         "schema": {"type": "string"},
         "in": "header",
         "name": "X-Authorization-Provider",
         "description": "Provider domain",
     }
-    spec["paths"]["/Company/BasicInfo"]["post"]["parameters"] = [x_app_provider_header]
-    check_validation_error(tmp_path, spec, err.AuthorizationHeaderMissing)
+    x_consent_token_header = {
+        "schema": {"type": "string"},
+        "in": "header",
+        "name": "x-consent-token",
+        "description": "Consent token",
+    }
+    spec["paths"]["/Company/BasicInfo"]["post"]["parameters"] = [
+        x_auth_provider_header,
+        x_consent_token_header,
+    ]
+    check_validation_error(
+        tmp_path,
+        spec,
+        err.AuthorizationHeaderMissing,
+        authorization_headers=True,
+        consent_headers=True,
+    )
 
 
 def test_auth_provider_header_is_missing(tmp_path, spec):
@@ -116,8 +142,49 @@ def test_auth_provider_header_is_missing(tmp_path, spec):
         "name": "Authorization",
         "description": "User bearer token",
     }
-    spec["paths"]["/Company/BasicInfo"]["post"]["parameters"] = [auth_header]
-    check_validation_error(tmp_path, spec, err.AuthProviderHeaderMissing)
+    x_consent_token_header = {
+        "schema": {"type": "string"},
+        "in": "header",
+        "name": "x-consent-token",
+        "description": "Consent token",
+    }
+    spec["paths"]["/Company/BasicInfo"]["post"]["parameters"] = [
+        auth_header,
+        x_consent_token_header,
+    ]
+    check_validation_error(
+        tmp_path,
+        spec,
+        err.AuthProviderHeaderMissing,
+        authorization_headers=True,
+        consent_headers=True,
+    )
+
+
+def test_consent_token_header_is_missing(tmp_path, spec):
+    auth_header = {
+        "schema": {"type": "string"},
+        "in": "header",
+        "name": "Authorization",
+        "description": "User bearer token",
+    }
+    x_auth_provider_header = {
+        "schema": {"type": "string"},
+        "in": "header",
+        "name": "X-Authorization-Provider",
+        "description": "Provider domain",
+    }
+    spec["paths"]["/Company/BasicInfo"]["post"]["parameters"] = [
+        auth_header,
+        x_auth_provider_header,
+    ]
+    check_validation_error(
+        tmp_path,
+        spec,
+        err.ConsentTokenHeaderMissing,
+        authorization_headers=True,
+        consent_headers=True,
+    )
 
 
 def test_servers_are_defined(tmp_path, spec):

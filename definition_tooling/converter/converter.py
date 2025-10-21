@@ -1,4 +1,5 @@
 import importlib.util
+import inspect
 import json
 import subprocess
 from pathlib import Path
@@ -145,6 +146,8 @@ class DataProductDefinition(BaseModel):
 def export_openapi_spec(
     definition: DataProductDefinition,
     definition_name: str,
+    authorization_headers: bool,
+    consent_headers: bool,
 ) -> dict:
     """
     Given a data product definition, create a FastAPI application and a corresponding
@@ -152,6 +155,8 @@ def export_openapi_spec(
 
     :param definition: Data product definition
     :param definition_name: Name of the definition, e.g. AirQuality/Current_v0.1
+    :param authorization_headers: Whether to include authorization headers
+    :param consent_headers: Whether to include consent headers
     :return: OpenAPI spec
     """
     app = FastAPI(
@@ -185,15 +190,6 @@ def export_openapi_spec(
     }
     responses.update(DATA_PRODUCT_ERRORS)
 
-    @app.post(
-        f"/{definition_name}",
-        summary=definition.title,
-        description=definition.description,
-        response_model=definition.response,
-        responses=responses,
-        deprecated=definition.deprecated,
-        tags=sorted(set(definition.tags)),
-    )
     def request(
         params: definition.request,
         x_consent_token: consent_header_type = Header(
@@ -213,6 +209,34 @@ def export_openapi_spec(
     ):
         pass
 
+    kwargs_to_remove = set()
+    if not authorization_headers:
+        kwargs_to_remove.add("authorization")
+        kwargs_to_remove.add("x_authorization_provider")
+
+    if not consent_headers:
+        kwargs_to_remove.add("x_consent_token")
+
+    if kwargs_to_remove:
+        sig = inspect.signature(request)
+        params = sig.parameters
+        filtered_params = [
+            param
+            for param_name, param in params.items()
+            if param_name not in kwargs_to_remove
+        ]
+        request.__signature__ = sig.replace(parameters=filtered_params)
+
+    app.post(
+        f"/{definition_name}",
+        summary=definition.title,
+        description=definition.description,
+        response_model=definition.response,
+        responses=responses,
+        deprecated=definition.deprecated,
+        tags=sorted(set(definition.tags)),
+    )(request)
+
     openapi = app.openapi()
 
     for path, data in openapi["paths"].items():
@@ -231,7 +255,12 @@ def styled_error(error: str, path: Path) -> str:
     return f"[bold red]{error}[/bold red] in [yellow]{path}[/yellow]:exclamation:"
 
 
-def convert_data_product_definitions(src: Path, dest: Path) -> bool:
+def convert_data_product_definitions(
+    src: Path,
+    dest: Path,
+    authorization_headers: bool = False,
+    consent_headers: bool = False,
+) -> bool:
     """
     Browse folder for definitions defined as python files
     and export them to corresponding OpenAPI specs in the output folder
@@ -263,7 +292,9 @@ def convert_data_product_definitions(src: Path, dest: Path) -> bool:
             print(styled_error("Error finding DEFINITION variable", p))
             continue
 
-        openapi = export_openapi_spec(definition, definition_name)
+        openapi = export_openapi_spec(
+            definition, definition_name, authorization_headers, consent_headers
+        )
 
         out_file = (dest / p.relative_to(src)).with_suffix(".json")
 

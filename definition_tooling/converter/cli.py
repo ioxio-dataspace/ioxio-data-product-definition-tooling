@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from typer import Argument, Exit, Typer
+from typer import Argument, Exit, Option, Typer
 
 from definition_tooling.converter import convert_data_product_definitions
 
@@ -23,6 +23,17 @@ def convert_definitions(
         file_okay=False,
         exists=True,
     ),
+    authorization_headers: bool = Option(
+        False,
+        help="Add headers for authorization ('Authorization' and "
+        "'X-Authorization-Provider')",
+    ),
+    consent_headers: bool = Option(
+        False,
+        help="Add headers for consent ('X-Consent-Token')",
+    ),
 ):
-    should_fail_hook = convert_data_product_definitions(src, dest)
+    should_fail_hook = convert_data_product_definitions(
+        src, dest, authorization_headers, consent_headers
+    )
     raise Exit(code=int(should_fail_hook))

@@ -73,7 +73,13 @@ def validate_version(spec: dict, spec_path: Path, root_path: Path):
             raise err.TooLowVersion
 
 
-def validate_spec(spec: dict, spec_path: Path, root_path: Path):
+def validate_spec(
+    spec: dict,
+    spec_path: Path,
+    root_path: Path,
+    authorization_headers: bool,
+    consent_headers: bool,
+):
     """
     Validate that OpenAPI spec looks like a data product definition. For example, that
     it only has one POST method defined.
@@ -81,6 +87,8 @@ def validate_spec(spec: dict, spec_path: Path, root_path: Path):
     :param spec: OpenAPI spec
     :param spec_path: Path to the actual definition
     :param root_path: Path to the root of specs
+    :param authorization_headers: Whether to require authorization related headers
+    :param consent_headers: Whether to require consent related headers
     :raises OpenApiValidationError: When OpenAPI spec is incorrect
     """
     if "servers" in spec:
@@ -131,15 +139,18 @@ def validate_spec(spec: dict, spec_path: Path, root_path: Path):
         if not responses.get(str(code)):
             raise err.HTTPResponseIsMissing(f"Missing response for status code {code}")
 
-    headers = [
+    headers = {
         param.get("name", "").lower()
         for param in post_route.get("parameters", [])
         if param.get("in") == "header"
-    ]
-    if "authorization" not in headers:
-        raise err.AuthorizationHeaderMissing
-    if "x-authorization-provider" not in headers:
-        raise err.AuthProviderHeaderMissing
+    }
+    if authorization_headers:
+        if "authorization" not in headers:
+            raise err.AuthorizationHeaderMissing
+        if "x-authorization-provider" not in headers:
+            raise err.AuthProviderHeaderMissing
+    if consent_headers and "x-consent-token" not in headers:
+        raise err.ConsentTokenHeaderMissing
 
     validate_version(spec=spec, spec_path=spec_path, root_path=root_path)
 
@@ -149,9 +160,13 @@ class DefinitionValidator:
         self,
         spec_path: Union[str, Path],
         root_path: Union[str, Path],
+        authorization_headers: bool = False,
+        consent_headers: bool = False,
     ):
         self.root_path = Path(root_path)
         self.spec_path = Path(spec_path)
+        self.authorization_headers = authorization_headers
+        self.consent_headers = consent_headers
 
     def validate(self):
         try:
@@ -160,9 +175,12 @@ class DefinitionValidator:
             raise err.InvalidJSON(f"Incorrect JSON: {self.spec_path}")
         except Exception as e:
             raise err.ValidatorError(f"Failed to validate {self.spec_path}: {e}")
-        self.validate_spec(spec, spec_path=self.spec_path, root_path=self.root_path)
 
-    @classmethod
-    def validate_spec(cls, spec: dict, spec_path: Path, root_path: Path):
         # it's moved to separate function to reduce indentation
-        return validate_spec(spec, spec_path=spec_path, root_path=root_path)
+        return validate_spec(
+            spec,
+            spec_path=self.spec_path,
+            root_path=self.root_path,
+            authorization_headers=self.authorization_headers,
+            consent_headers=self.consent_headers,
+        )
