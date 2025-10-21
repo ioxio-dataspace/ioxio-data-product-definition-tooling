@@ -395,48 +395,6 @@
         "operationId": "request_Company_BasicInfo",
         "parameters": [
           {
-            "description": "Optional consent token",
-            "in": "header",
-            "name": "x-consent-token",
-            "required": false,
-            "schema": {
-              "default": "",
-              "description": "Optional consent token",
-              "title": "X-Consent-Token",
-              "type": "string"
-            }
-          },
-          {
-            "description": "The login token. Value should be \"Bearer [token]\"",
-            "in": "header",
-            "name": "authorization",
-            "required": false,
-            "schema": {
-              "default": "",
-              "description": "The login token. Value should be \"Bearer [token]\"",
-              "title": "Authorization",
-              "type": "string"
-            }
-          },
-          {
-            "description": "The bare domain of the system that provided the token.",
-            "in": "header",
-            "name": "x-authorization-provider",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "The bare domain of the system that provided the token.",
-              "title": "X-Authorization-Provider"
-            }
-          },
-          {
             "description": "API key or token",
             "in": "header",
             "name": "x-api-key",

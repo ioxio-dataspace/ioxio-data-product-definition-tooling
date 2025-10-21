@@ -11,9 +11,25 @@ from definition_tooling.converter import (
 )
 
 
-def test_air_quality(tmpdir, json_snapshot):
+@pytest.mark.parametrize(
+    ["authorization_headers", "consent_headers"],
+    [
+        pytest.param(False, False, id="no-auth_no-consent"),
+        pytest.param(False, True, id="no-auth_consent"),
+        pytest.param(True, False, id="auth_no-consent"),
+        pytest.param(True, True, id="auth-consent"),
+    ],
+)
+def test_air_quality(
+    tmpdir, json_snapshot, authorization_headers: bool, consent_headers: bool
+):
     out_dir = tmpdir.mkdir("output")
-    convert_data_product_definitions(Path(__file__).parent / "data", Path(out_dir))
+    convert_data_product_definitions(
+        Path(__file__).parent / "data",
+        Path(out_dir),
+        authorization_headers,
+        consent_headers,
+    )
 
     dest_file = out_dir / "AirQuality" / "Current.json"
     assert dest_file.exists()
