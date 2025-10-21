@@ -209,7 +209,7 @@ def export_openapi_spec(
     ):
         pass
 
-    kwargs_to_remove = set([])
+    kwargs_to_remove = set()
     if not authorization_headers:
         kwargs_to_remove.add("authorization")
         kwargs_to_remove.add("x_authorization_provider")
