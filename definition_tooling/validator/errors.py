@@ -71,6 +71,10 @@ class AuthProviderHeaderMissing(DefinitionError):
     msg = "X-Authorization-Provider header is missing"
 
 
+class ConsentTokenHeaderMissing(DefinitionError):
+    msg = "X-Consent-Token header is missing"
+
+
 class ServersShouldNotBeDefined(DefinitionError):
     msg = '"servers" section should not exist in definition'
 
