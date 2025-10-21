@@ -225,8 +225,7 @@ def export_openapi_spec(
             for param_name, param in params.items()
             if param_name not in kwargs_to_remove
         ]
-        new_sig = sig.replace(parameters=filtered_params)
-        request.__signature__ = new_sig
+        request.__signature__ = sig.replace(parameters=filtered_params)
 
     app.post(
         f"/{definition_name}",
